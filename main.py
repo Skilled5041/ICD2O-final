@@ -95,9 +95,9 @@ class Deck:
 class Hand:
     """A class representing a player's hand in a card game."""
 
-    def __init__(self, cards: list):
+    def __init__(self):
         """Initialize a new hand with the given list of cards."""
-        self.cards = cards
+        self.cards = []
 
     def add_card(self, card: Card):
         """Add a card to the hand."""
@@ -178,8 +178,8 @@ class BlackjackGame:
 
     def start_new_game(self, event=None):
         """Start a new game of blackjack."""
-        self.player_hand = Hand([])
-        self.dealer_hand = Hand([])
+        self.player_hand = Hand()
+        self.dealer_hand = Hand()
 
         self.deck = Deck()
         self.deck.shuffle()
