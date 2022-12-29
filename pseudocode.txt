@@ -1,0 +1,53 @@
+Import the libraries
+
+Button class:
+    Set the attributes
+        - Create a rectangle using two points
+        - Create text at the center of the rectangle
+        - Set enabled attribute to true
+    Method to draw the button
+        - Draw the rectangle and text
+    Method to undraw the button
+        - Undraw the rectangle and text
+    Method to bind a click event listener to the button
+        - Bind a function that activates when the left click clicks the button]
+    Method to unbind the click event listener
+        - Unbind the click listener
+    Method to determine if a point is inside the button
+        - Sort the points so the x-value and y-value of point 1 is < than point 2
+        - Return if the point is between the two sorted points
+
+Card class:
+    Set the attributes of the card
+        - Set the suit and value of the card
+    Method to get the suit of card in string format
+        - Return the suit
+    Method to get the suit of the string in integer format
+        - Return the index of the suit in a list with all the suits
+    Method to get the value of the card
+        - Return the value of the card
+    Method to get the name of card
+        - Return the value and suit of the card combined in a string
+
+Deck class:
+    Create a list and add all cards in a regular deck of cards in it
+        - Use two for loops
+        - One for the values, and one for the suits
+    Shuffle method
+        - Use the random library to randomise the list of cards
+    Method to draw a card
+        - Remove the top of the list and return it
+
+Hand class:
+    Create a list to store the cards
+    Method to add a card to the hand
+        - Append the card to the list
+    Method to get the sum of the hand (for blackjack)
+        - Create a variable to store the sum
+        - Add the value of every card to the sum
+        - Royals are worth 10
+        - If there is are ace(s), it will automatically be worth 11, unless the total goes over 21
+        - The value of the ace(s) will change to 1, if the total goes to 21
+        - Return the total
+
+Blackjack game class:
