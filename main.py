@@ -38,7 +38,7 @@ class Card:
     """1 = Diamonds, 2 = Clubs, 3 = Hearts, 4 = Spades"""
     """1 = Ace, 11 = Jack, 12 = Queen, 13 = King"""
 
-    def __init__(self, suit: "int 1 - 4", value: "int 1 - 13"):
+    def __init__(self, suit: int, value: int):
         """Initialize a new Card with the given suit and value."""
         suits = ["Diamonds", "Clubs", "Hearts", "Spades"]
         self.suit = suits[suit - 1]
