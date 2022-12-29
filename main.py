@@ -38,7 +38,7 @@ class Card:
     """1 = Diamonds, 2 = Clubs, 3 = Hearts, 4 = Spades"""
     """1 = Ace, 11 = Jack, 12 = Queen, 13 = King"""
 
-    def __init__(self, suit: "int 1 - 4", value: "int 1 - 13"):
+    def __init__(self, suit: int, value: int):
         """Initialize a new Card with the given suit and value."""
         suits = ["Diamonds", "Clubs", "Hearts", "Spades"]
         self.suit = suits[suit - 1]
@@ -176,7 +176,7 @@ class BlackjackGame:
         self.lbl_dealer_score.setTextColor("white")
         self.lbl_dealer_score.draw(self.win)
 
-    def start_new_game(self):
+    def start_new_game(self, event=None):
         """Start a new game of blackjack."""
         self.player_hand = Hand([])
         self.dealer_hand = Hand([])
@@ -215,7 +215,7 @@ class BlackjackGame:
         # self.card_images[self.player_hand.get_value() - 1].setImage(
         #     self.get_card_image_file(self.player_hand.cards[-1]))
 
-    def stand(self):
+    def stand(self, event=None):
         """End the player's turn and start the dealer's turn."""
         # have to add code to implement the dealer's turn
         pass
