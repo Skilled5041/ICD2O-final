@@ -1,4 +1,4 @@
-from graphics import *
+from graphics import * 
 window=GraphWin(1200, 800)
 def WinWindow():
  
