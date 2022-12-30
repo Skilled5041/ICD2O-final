@@ -1,40 +1,11 @@
 from graphics import *
-import typing
+from graphics_elements import Button
+from start_and_lose_screens import win_window, lose_window
+from audioplayer import AudioPlayer
 import random
 import time
 import sys
 
-
-class Button:
-    def __init__(self, p1: Point, p2: Point, label: str):
-        self.body = Rectangle(p1, p2)
-        self.label = Text(Point((p1.getX() + p2.getX()) / 2, (p1.getY() + p2.getY()) / 2), label)
-        self.enabled = True
-
-    def draw(self, window: GraphWin):
-        self.body.draw(window)
-        self.label.draw(window)
-        window.items.append(self)
-
-    def undraw(self, window: GraphWin):
-        self.body.undraw()
-        self.label.undraw()
-        window.items.remove(self)
-
-    def bind_click(self, win: GraphWin, fn: typing.Callable):
-        win.tag_bind(self.body.id, "<Button-1>", fn)
-        win.tag_bind(self.label.id, "<Button-1>", fn)
-
-    def unbind_click(self, win: GraphWin):
-        win.tag_unbind(self.body.id, "<Button-1>")
-        win.tag_bind(self.label.id, "<Button-1>")
-
-    def inside(self, click: Point) -> bool:
-        p1x = min(self.body.getP1().getX(), self.body.getP2().getX())
-        p1y = min(self.body.getP1().getY(), self.body.getP2().getY())
-        p2x = max(self.body.getP1().getX(), self.body.getP2().getX())
-        p2y = max(self.body.getP1().getY(), self.body.getP2().getY())
-        return p1x < click.getX() < p2x and p1y < click.getY() < p2y
 
 
 class Card:
@@ -147,6 +118,7 @@ class BlackjackGame:
         self.dealer_hand = None
         self.player_hand = None
         self.player_win = False
+        self.player_lose = False
         self.player_bust = False
 
         self.win = GraphWin("Blackjack", 1200, 800)
@@ -186,6 +158,10 @@ class BlackjackGame:
         self.lbl_dealer_score.setTextColor("white")
         self.lbl_dealer_score.draw(self.win)
 
+        self.result_text = Text(Point(600, 450), "")
+        self.result_text.setTextColor("white")
+        self.result_text.setSize(36)
+
     @staticmethod
     def get_card_image_file(value: int, suit: int) -> str:
         """Return the file name of the image for the given card."""
@@ -224,10 +200,10 @@ class BlackjackGame:
         self.player_card_images[0].draw(self.win)
         self.player_card_images[1].draw(self.win)
 
-        self.dealer_card_images.append(Image(Point(750, 200), "./images/card_back.png"))
-        self.dealer_card_images.append(Image(Point(850, 200),
+        self.dealer_card_images.append(Image(Point(750, 200),
                                              self.get_card_image_file(self.dealer_hand.cards[1].value,
                                                                       self.dealer_hand.cards[1].get_suit_int())))
+        self.dealer_card_images.append(Image(Point(850, 200), "./images/card_back.png"))
 
         self.dealer_card_images[0].draw(self.win)
         self.dealer_card_images[1].draw(self.win)
@@ -253,12 +229,20 @@ class BlackjackGame:
         if self.player_hand.get_sum_bj() > 21:
             self.player_bust = True
             self.btn_hit.enabled = False
-            """Show lose screen and lose money"""
+
+            self.result_text.setText("You bust!")
+            self.result_text.draw(self.win)
+
+            time.sleep(2.5)
+            self.on_player_lose()
 
         elif self.player_hand.get_sum_bj() == 21:
             self.win = True
             self.btn_hit.enabled = False
-            """Add end game or win stuff here later"""
+            self.result_text.setText("You got 21! You Win!")
+            self.result_text.draw(self.win)
+            time.sleep(2.5)
+            self.on_player_win()
 
     def stand(self, event=None):
         """End the player's turn and start the dealer's turn."""
@@ -267,11 +251,11 @@ class BlackjackGame:
 
     def dealer_turn(self):
 
-        self.dealer_card_images[0].undraw()
-        self.dealer_card_images[0] = Image(Point(750, 200),
+        self.dealer_card_images[1].undraw()
+        self.dealer_card_images[1] = Image(Point(850, 200),
                                            self.get_card_image_file(self.dealer_hand.cards[0].value,
                                                                     self.dealer_hand.cards[0].get_suit_int()))
-        self.dealer_card_images[0].draw(self.win)
+        self.dealer_card_images[1].draw(self.win)
         self.win.tag_raise(self.dealer_card_images[1].id)
         self.lbl_dealer_score.setText(f"Dealer Score: {self.dealer_hand.get_sum_bj()}")
 
@@ -290,15 +274,29 @@ class BlackjackGame:
                                              self.dealer_hand.cards[-1].get_suit_int())))
 
             self.dealer_card_images[-1].draw(self.win)
-
             self.lbl_dealer_score.setText(f"Dealer Score: {self.dealer_hand.get_sum_bj()}")
 
-        if self.player_hand.get_sum_bj() > 21:
-            pass
-            """Add end game or lose stuff here later"""
+        if self.dealer_hand.get_sum_bj() > 21:
+            self.player_win = True
+            self.result_text.setText("Dealer Busts! You Win!")
+            self.result_text.draw(self.win)
+            time.sleep(2.5)
+            self.on_player_win()
         elif self.player_hand.get_sum_bj() > self.dealer_hand.get_sum_bj():
             self.player_win = True
-            """Add end game or win stuff here later"""
+            self.result_text.setText("Your hand is higher! You Win!")
+            self.result_text.draw(self.win)
+            time.sleep(2.5)
+            self.on_player_win()
+        elif self.player_hand.get_sum_bj() < self.dealer_hand.get_sum_bj():
+            self.player_lose = True
+
+            self.result_text.setText("Dealer's hand is higher! You Lose!")
+            self.result_text.draw(self.win)
+
+            time.sleep(2.5)
+            self.on_player_lose()
+
         elif self.player_hand.get_sum_bj() == self.dealer_hand.get_sum_bj():
             self.player_win = True
             """Add end game or tie stuff here later"""
@@ -309,6 +307,14 @@ class BlackjackGame:
         self.btn_stand.bind_click(self.win, self.stand)
         self.btn_new_game.bind_click(self.win, self.start_new_game)
         self.win.mainloop()
+
+    def on_player_win(self):
+        self.win.delete("all")
+        win_window(self.win)
+
+    def on_player_lose(self):
+        self.win.delete("all")
+        lose_window(self.win)
 
 
 def main():
