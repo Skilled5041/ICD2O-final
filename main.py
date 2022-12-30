@@ -209,6 +209,9 @@ class BlackjackGame:
         self.dealer_card_images[1].draw(self.win)
 
     def hit(self, event=None):
+
+        hitsound = AudioPlayer("./sounds/hit.wav")
+        hitsound.play()
         """Draw a new card for the player."""
         if not self.btn_hit.enabled:
             return

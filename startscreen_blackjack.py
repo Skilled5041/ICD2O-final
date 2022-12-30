@@ -1,4 +1,4 @@
-from graphics import *
+from graphics import * 
 import time
 
 WIDTH = int(1200)
