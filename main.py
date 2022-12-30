@@ -1,6 +1,8 @@
 from graphics import *
 import typing
 import random
+import time
+import sys
 
 
 class Button:
@@ -21,9 +23,11 @@ class Button:
 
     def bind_click(self, win: GraphWin, fn: typing.Callable):
         win.tag_bind(self.body.id, "<Button-1>", fn)
+        win.tag_bind(self.label.id, "<Button-1>", fn)
 
     def unbind_click(self, win: GraphWin):
         win.tag_unbind(self.body.id, "<Button-1>")
+        win.tag_bind(self.label.id, "<Button-1>")
 
     def inside(self, click: Point) -> bool:
         p1x = min(self.body.getP1().getX(), self.body.getP2().getX())
@@ -103,6 +107,14 @@ class Hand:
         """Add a card to the hand."""
         self.cards.append(card)
 
+    def get_cards(self) -> list:
+        """Return the cards in the hand."""
+        return self.cards
+
+    def size(self) -> int:
+        """Return the number of cards in the hand."""
+        return len(self.cards)
+
     """May change this later"""
 
     def get_sum_bj(self) -> int:
@@ -113,22 +125,15 @@ class Hand:
             if card.get_value() > 10:
                 """Add 10 if the card is a jack, queen, or king."""
                 total += 10
-                if total > 21 and aces11 > 0:
-                    """If the total is over 21 and there are aces in the hand that are worth 11,
-                     subtract 10 from the total to make the ace worth 1."""
-                    total -= 10
-                    aces11 -= 1
             elif card.get_value() == 1:
-                """If it is an ace add 11 or 1 depending if the total will go over 21."""
-                total += 11 if total + 11 <= 21 else 1
-                aces11 += 1 if total + 11 <= 21 else 0
+                total += 11
+                aces11 += 1
             else:
                 total += card.get_value()
-                if total > 21 and aces11 > 0:
-                    """If the total is over 21 and there are aces in the hand that are worth 11,
-                    subtract 10 from the total to make the ace worth 1."""
-                    total -= 10
-                    aces11 -= 1
+
+        while total > 21 and aces11 > 0:
+            total -= 10
+            aces11 -= 1
 
         return total
 
@@ -141,40 +146,56 @@ class BlackjackGame:
         self.deck = None
         self.dealer_hand = None
         self.player_hand = None
+        self.player_win = False
+        self.player_bust = False
+
         self.win = GraphWin("Blackjack", 1200, 800)
 
         self.bg = Image(Point(600, 400), "./images/bj_bg.png")
         self.bg.draw(self.win)
 
-        self.btn_hit = Button(Point(50, 500), Point(150, 550), "Hit")
+        self.close_btn = Button(Point(0, 0), Point(30, 30), "X")
+        self.close_btn.body.setFill("red")
+        self.close_btn.body.setOutline("red")
+        self.close_btn.draw(self.win)
+        self.close_btn.bind_click(self.win, self.close_win)
+
+        self.btn_hit = Button(Point(200, 620), Point(400, 700), "Hit")
         self.btn_hit.body.setFill("white")
+        self.btn_hit.label.setSize(24)
         self.btn_hit.draw(self.win)
 
-        self.btn_stand = Button(Point(200, 500), Point(300, 550), "Stand")
+        self.btn_stand = Button(Point(500, 620), Point(700, 700), "Stand")
         self.btn_stand.body.setFill("white")
+        self.btn_stand.label.setSize(24)
         self.btn_stand.draw(self.win)
 
-        self.btn_new_game = Button(Point(350, 500), Point(450, 550), "New Game")
+        self.btn_new_game = Button(Point(800, 620), Point(1000, 700), "New Game")
         self.btn_new_game.body.setFill("white")
+        self.btn_new_game.label.setSize(24)
         self.btn_new_game.draw(self.win)
 
-        self.card_slots = []
-        for i in range(5):
-            self.card_slots.append(Rectangle(Point(50 + i * 100, 50), Point(150 + i * 100, 250)))
-            self.card_slots[i].draw(self.win)
+        self.player_card_images = []
+        self.dealer_card_images = []
 
-        self.card_images = []
-        for i in range(5):
-            self.card_images.append(Image(Point(100 + i * 100, 150), "./images/card_back.png"))
-            self.card_images[i].draw(self.win)
-
-        self.lbl_player_score = Text(Point(100, 300), "Player Score: 0")
+        self.lbl_player_score = Text(Point(200, 350), "Player Score: 0")
         self.lbl_player_score.setTextColor("white")
         self.lbl_player_score.draw(self.win)
 
-        self.lbl_dealer_score = Text(Point(700, 300), "Dealer Score: 0")
+        self.lbl_dealer_score = Text(Point(800, 350), "Dealer Score: ???")
         self.lbl_dealer_score.setTextColor("white")
         self.lbl_dealer_score.draw(self.win)
+
+    @staticmethod
+    def get_card_image_file(value: int, suit: int) -> str:
+        """Return the file name of the image for the given card."""
+        values = ["ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"]
+        suits = ["diamonds", "clubs", "hearts", "spades"]
+        return f"./cards/{values[value - 1]}_of_{suits[suit - 1]}.png"
+
+    def close_win(self, event=None):
+        self.win.close()
+        sys.exit()
 
     def start_new_game(self, event=None):
         """Start a new game of blackjack."""
@@ -191,34 +212,96 @@ class BlackjackGame:
         self.dealer_hand.add_card(self.deck.draw())
 
         self.lbl_player_score.setText(f"Player Score: {self.player_hand.get_sum_bj()}")
+        self.lbl_dealer_score.setText(f"Dealer Score: ???")
 
-        self.card_images[0].undraw()
-        self.card_images[1].undraw()
+        self.player_card_images.append(Image(Point(150, 200),
+                                             self.get_card_image_file(self.player_hand.cards[0].value,
+                                                                      self.player_hand.cards[0].get_suit_int())))
+        self.player_card_images.append(Image(Point(250, 200),
+                                             self.get_card_image_file(self.player_hand.cards[1].value,
+                                                                      self.player_hand.cards[1].get_suit_int())))
 
-        self.card_images[2] = Image(Point(100, 150), self.get_card_image_file(self.player_hand.cards[0].get_value(),
-                                                                              self.player_hand.cards[0].get_suit_int()))
-        self.card_images[2].draw(self.win)
+        self.player_card_images[0].draw(self.win)
+        self.player_card_images[1].draw(self.win)
 
-    @staticmethod
-    def get_card_image_file(value: int, suit: int) -> str:
-        """Return the file name of the image for the given card."""
-        values = ["ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"]
-        suits = ["diamonds", "clubs", "hearts", "spades"]
-        return f"./cards/{values[value - 1]}_of_{suits[suit - 1]}.png"
+        self.dealer_card_images.append(Image(Point(750, 200), "./images/card_back.png"))
+        self.dealer_card_images.append(Image(Point(850, 200),
+                                             self.get_card_image_file(self.dealer_hand.cards[1].value,
+                                                                      self.dealer_hand.cards[1].get_suit_int())))
+
+        self.dealer_card_images[0].draw(self.win)
+        self.dealer_card_images[1].draw(self.win)
 
     def hit(self, event=None):
         """Draw a new card for the player."""
-        self.player_hand.add_card(self.deck.draw())
+        if not self.btn_hit.enabled:
+            return
 
+        if self.player_hand.size() % 4 == 0:
+            self.lbl_player_score.move(0, 80)
+
+        self.player_hand.add_card(self.deck.draw())
         self.lbl_player_score.setText(f"Player Score: {self.player_hand.get_sum_bj()}")
 
-        # self.card_images[self.player_hand.get_value() - 1].setImage(
-        #     self.get_card_image_file(self.player_hand.cards[-1]))
+        # make it so there are max 4 card by row, and the next row moves down by 60 pixels
+        self.player_card_images.append(
+            Image(Point(150 + (len(self.player_card_images) % 4) * 100, 200 + (len(self.player_card_images) // 4) * 80),
+                  self.get_card_image_file(self.player_hand.cards[-1].value,
+                                           self.player_hand.cards[-1].get_suit_int())))
+        self.player_card_images[-1].draw(self.win)
+
+        if self.player_hand.get_sum_bj() > 21:
+            self.player_bust = True
+            self.btn_hit.enabled = False
+            """Show lose screen and lose money"""
+
+        elif self.player_hand.get_sum_bj() == 21:
+            self.win = True
+            self.btn_hit.enabled = False
+            """Add end game or win stuff here later"""
 
     def stand(self, event=None):
         """End the player's turn and start the dealer's turn."""
-        # have to add code to implement the dealer's turn
-        pass
+        self.btn_hit.enabled = False
+        self.dealer_turn()
+
+    def dealer_turn(self):
+
+        self.dealer_card_images[0].undraw()
+        self.dealer_card_images[0] = Image(Point(750, 200),
+                                           self.get_card_image_file(self.dealer_hand.cards[0].value,
+                                                                    self.dealer_hand.cards[0].get_suit_int()))
+        self.dealer_card_images[0].draw(self.win)
+        self.win.tag_raise(self.dealer_card_images[1].id)
+        self.lbl_dealer_score.setText(f"Dealer Score: {self.dealer_hand.get_sum_bj()}")
+
+        while self.dealer_hand.get_sum_bj() < 17:
+            time.sleep(0.4)
+
+            if self.dealer_hand.size() % 4 == 0:
+                self.lbl_dealer_score.move(0, 80)
+
+            self.dealer_hand.add_card(self.deck.draw())
+            self.dealer_card_images.append(
+                Image(
+                    Point(750 + (len(self.dealer_card_images) % 4) * 100,
+                          200 + (len(self.dealer_card_images) // 4) * 80),
+                    self.get_card_image_file(self.dealer_hand.cards[-1].value,
+                                             self.dealer_hand.cards[-1].get_suit_int())))
+
+            self.dealer_card_images[-1].draw(self.win)
+
+            self.lbl_dealer_score.setText(f"Dealer Score: {self.dealer_hand.get_sum_bj()}")
+
+        if self.player_hand.get_sum_bj() > 21:
+            pass
+            """Add end game or lose stuff here later"""
+        elif self.player_hand.get_sum_bj() > self.dealer_hand.get_sum_bj():
+            self.player_win = True
+            """Add end game or win stuff here later"""
+        elif self.player_hand.get_sum_bj() == self.dealer_hand.get_sum_bj():
+            self.player_win = True
+            """Add end game or tie stuff here later"""
 
     def play(self):
         """Bind the event listeners to the buttons."""
