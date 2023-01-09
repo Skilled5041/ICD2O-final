@@ -1,7 +1,8 @@
 import json
 
 
-def reset():
+# Reset the stats
+def reset() -> None:
     with open("stats.json") as file:
         data = json.load(file)
 
@@ -15,7 +16,8 @@ def reset():
         json.dump(data, file, indent=4)
 
 
-def add_win():
+# Add a win to the stats
+def add_win() -> None:
     with open("stats.json") as file:
         data = json.load(file)
 
@@ -27,7 +29,8 @@ def add_win():
         json.dump(data, file, indent=4)
 
 
-def add_loss():
+# Add a loss to the stats
+def add_loss() -> None:
     with open("stats.json") as file:
         data = json.load(file)
 
@@ -39,7 +42,8 @@ def add_loss():
         json.dump(data, file, indent=4)
 
 
-def add_time(time):
+# Add time in seconds
+def add_time(time: int) -> None:
     with open("stats.json") as file:
         data = json.load(file)
 
