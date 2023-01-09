@@ -1,7 +1,7 @@
 {
-"games_played": 0,
-  "wins": 0,
-  "losses": 0,
-  "winrate": 0,
-  "total_time": 0
+    "games_played": 0,
+    "wins": 0,
+    "losses": 0,
+    "win-rate": 0,
+    "total_time": 0
 }
