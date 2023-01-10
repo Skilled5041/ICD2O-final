@@ -1,11 +1,9 @@
 from graphics import *
 from graphics_elements import Button
-from start_and_lose_screens import win_window, lose_window
+from start_and_lose_screens import win_window, lose_window, tie_window
 from audioplayer import AudioPlayer
 import random
-import time
 import sys
-
 
 
 class Card:
@@ -162,6 +160,11 @@ class BlackjackGame:
         self.result_text.setTextColor("white")
         self.result_text.setSize(36)
 
+        self.dealer_playing = False
+
+        self.hitsound = AudioPlayer("./sounds/hit_sfx.mp3")
+        self.standsound = AudioPlayer("./sounds/stand_sfx.mp3")
+
     @staticmethod
     def get_card_image_file(value: int, suit: int) -> str:
         """Return the file name of the image for the given card."""
@@ -169,8 +172,8 @@ class BlackjackGame:
         suits = ["diamonds", "clubs", "hearts", "spades"]
         return f"./cards/{values[value - 1]}_of_{suits[suit - 1]}.png"
 
-    def close_win(self, event=None):
-        self.win.close()
+    @staticmethod
+    def close_win(event=None):
         sys.exit()
 
     def start_new_game(self, event=None):
@@ -208,13 +211,19 @@ class BlackjackGame:
         self.dealer_card_images[0].draw(self.win)
         self.dealer_card_images[1].draw(self.win)
 
+        if self.player_hand.get_sum_bj() == 21 and self.dealer_hand.get_sum_bj() != 21:
+            self.player_win = True
+            self.btn_hit.enabled = False
+            self.result_text.setText("You got 21! You won!")
+            self.on_player_win()
+
     def hit(self, event=None):
 
-        hitsound = AudioPlayer("./sounds/hit.wav")
-        hitsound.play()
         """Draw a new card for the player."""
         if not self.btn_hit.enabled:
             return
+
+        self.hitsound.play(loop=False, block=False)
 
         if self.player_hand.size() % 4 == 0:
             self.lbl_player_score.move(0, 80)
@@ -234,26 +243,27 @@ class BlackjackGame:
             self.btn_hit.enabled = False
 
             self.result_text.setText("You bust!")
-            self.result_text.draw(self.win)
-
-            time.sleep(2.5)
             self.on_player_lose()
 
         elif self.player_hand.get_sum_bj() == 21:
-            self.win = True
+            self.player_win = True
             self.btn_hit.enabled = False
             self.result_text.setText("You got 21! You Win!")
-            self.result_text.draw(self.win)
-            time.sleep(2.5)
             self.on_player_win()
 
     def stand(self, event=None):
         """End the player's turn and start the dealer's turn."""
         self.btn_hit.enabled = False
+        self.standsound.play(loop=False, block=False)
+
         self.dealer_turn()
 
     def dealer_turn(self):
 
+        if self.dealer_playing:
+            return
+
+        self.dealer_playing = True
         self.dealer_card_images[1].undraw()
         self.dealer_card_images[1] = Image(Point(850, 200),
                                            self.get_card_image_file(self.dealer_hand.cards[0].value,
@@ -263,7 +273,7 @@ class BlackjackGame:
         self.lbl_dealer_score.setText(f"Dealer Score: {self.dealer_hand.get_sum_bj()}")
 
         while self.dealer_hand.get_sum_bj() < 17:
-            time.sleep(0.4)
+            self.win.after(400)
 
             if self.dealer_hand.size() % 4 == 0:
                 self.lbl_dealer_score.move(0, 80)
@@ -282,27 +292,22 @@ class BlackjackGame:
         if self.dealer_hand.get_sum_bj() > 21:
             self.player_win = True
             self.result_text.setText("Dealer Busts! You Win!")
-            self.result_text.draw(self.win)
-            time.sleep(2.5)
             self.on_player_win()
         elif self.player_hand.get_sum_bj() > self.dealer_hand.get_sum_bj():
             self.player_win = True
             self.result_text.setText("Your hand is higher! You Win!")
-            self.result_text.draw(self.win)
-            time.sleep(2.5)
             self.on_player_win()
         elif self.player_hand.get_sum_bj() < self.dealer_hand.get_sum_bj():
             self.player_lose = True
 
             self.result_text.setText("Dealer's hand is higher! You Lose!")
-            self.result_text.draw(self.win)
-
-            time.sleep(2.5)
             self.on_player_lose()
 
         elif self.player_hand.get_sum_bj() == self.dealer_hand.get_sum_bj():
             self.player_win = True
-            """Add end game or tie stuff here later"""
+            self.result_text.setText("It's a tie!")
+
+            self.on_player_win()
 
     def play(self):
         """Bind the event listeners to the buttons."""
@@ -312,12 +317,23 @@ class BlackjackGame:
         self.win.mainloop()
 
     def on_player_win(self):
+        self.win.unbind_all("<Button-1>")
         self.win.delete("all")
+        self.result_text.draw(self.win)
         win_window(self.win)
 
     def on_player_lose(self):
+        self.win.unbind_all("<Button-1>")
         self.win.delete("all")
+        self.result_text.draw(self.win)
         lose_window(self.win)
+
+    def on_player_tie(self):
+        self.win.unbind_all("<Button-1>")
+        self.win.delete("all")
+        tie_window(self.win)
+        self.result_text.draw(self.win)
+        self.close_btn.draw(self.win)
 
 
 def main():

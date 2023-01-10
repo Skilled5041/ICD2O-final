@@ -45,8 +45,8 @@ def lose_window(window):
     """Add later"""
 
 
-def tie_screen(window):
-    window.setBackground(color_rgb(255, 204, 203))
+def tie_window(window):
+    window.setBackground(color_rgb(150, 150, 150))
 
     tie_message = Text(Point(600, 200), "It's a Tie!")
     tie_message.setStyle('bold')
@@ -68,12 +68,3 @@ def tie_screen(window):
 
 def exit_window(event=None):
     sys.exit()
-
-
-def main():
-    win = GraphWin("test", 1200, 800)
-    tie_screen(win)
-    win.mainloop()
-
-if __name__ == '__main__':
-    main()
