@@ -3,7 +3,7 @@ from graphics_elements import Button
 import sys
 
 
-def win_window(window):
+def win_window(window, player_score, dealer_score):
     window.setBackground(color_rgb(113, 203, 255))
 
     win_message = Text(Point(600, 200), "Congrats, you won!")
@@ -21,10 +21,14 @@ def win_window(window):
     main_menu_btn.label.setSize(24)
     main_menu_btn.draw(window)
 
+    scores = Text(Point(600, 300), f"Your score: {player_score}\nDealer score: {dealer_score}")
+    scores.setSize(24)
+    scores.draw(window)
+
     """Add later"""
 
 
-def lose_window(window):
+def lose_window(window, player_score, dealer_score):
     window.setBackground(color_rgb(255, 204, 203))
 
     lost_message = Text(Point(600, 200), "You Lost :(")
@@ -42,10 +46,14 @@ def lose_window(window):
     main_menu_btn.label.setSize(24)
     main_menu_btn.draw(window)
 
+    scores = Text(Point(600, 300), f"Your score: {player_score}\nDealer score: {dealer_score}")
+    scores.setSize(24)
+    scores.draw(window)
+
     """Add later"""
 
 
-def tie_window(window):
+def tie_window(window, player_score, dealer_score):
     window.setBackground(color_rgb(150, 150, 150))
 
     tie_message = Text(Point(600, 200), "It's a Tie!")
@@ -62,6 +70,10 @@ def tie_window(window):
     main_menu_btn.body.setFill("red")
     main_menu_btn.label.setSize(24)
     main_menu_btn.draw(window)
+
+    scores = Text(Point(600, 300), f"Your score: {player_score}\nDealer score: {dealer_score}")
+    scores.setSize(24)
+    scores.draw(window)
 
     """Add later"""
 

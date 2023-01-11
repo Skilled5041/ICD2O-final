@@ -1,18 +1,17 @@
 from graphics import *
-
-import graphics_elements
 from graphics_elements import Button
 from win_and_lose_screens import win_window, lose_window, tie_window
 from audioplayer import AudioPlayer
 import random
 import sys
+import time
 
 
 def undraw_all(window):
-    while len(window.items) > 0:
-        if type(window.items[0]) is graphics_elements.Button:
+    for i in range(len(window.items)):
+        if type(window.items[0]) is Button:
             window.items[0].undraw(window)
-        elif type(window.items[0]) is not graphics_elements.Button:
+        elif type(window.items[0]) is not Button:
             window.items[0].undraw()
 
 
@@ -32,6 +31,7 @@ class Card:
         return self.suit
 
     def get_suit_int(self) -> int:
+        # Get the suit of the card as an integer (1 = Diamonds, 2 = Clubs, 3 = Hearts, 4 = Spades)
         return ["Diamonds", "Clubs", "Hearts", "Spades"].index(self.suit) + 1
 
     def get_value(self) -> int:
@@ -73,6 +73,13 @@ class Deck:
     def draw(self) -> Card:
         """Draw the top card from the deck and return it."""
         return self.cards.pop()
+
+    def reset(self):
+        """Reset the deck of cards."""
+        self.cards.clear()
+        for i in range(13):
+            for j in range(4):
+                self.cards.append(Card(j + 1, i + 1))
 
 
 class Hand:
@@ -116,12 +123,17 @@ class Hand:
 
         return total
 
+    def reset(self):
+        """Reset the hand."""
+        self.cards.clear()
+
 
 class BlackjackGame:
     """A class representing a game of blackjack."""
 
     def __init__(self):
         """Initialize a new game of blackjack."""
+        self.current_screen = "game"
         self.deck = None
         self.dealer_hand = None
         self.player_hand = None
@@ -187,6 +199,9 @@ class BlackjackGame:
 
     def start_new_game(self, event=None):
         """Start a new game of blackjack."""
+
+        # TODO: Make it reset the game properly and start a new game
+
         self.player_hand = Hand()
         self.dealer_hand = Hand()
 
@@ -220,7 +235,7 @@ class BlackjackGame:
         self.dealer_card_images[0].draw(self.win)
         self.dealer_card_images[1].draw(self.win)
 
-        if self.player_hand.get_sum_bj() == 21 and self.dealer_hand.get_sum_bj() != 21:
+        if self.player_hand.get_sum_bj() == 21:
             self.player_win = True
             self.btn_hit.enabled = False
             self.result_text.setText("You got 21! You won!")
@@ -262,7 +277,10 @@ class BlackjackGame:
 
     def stand(self, event=None):
         """End the player's turn and start the dealer's turn."""
+        if not self.btn_stand.enabled:
+            return
         self.btn_hit.enabled = False
+        self.btn_stand.enabled = False
         self.standsound.play(loop=False, block=False)
 
         self.dealer_turn()
@@ -282,7 +300,7 @@ class BlackjackGame:
         self.lbl_dealer_score.setText(f"Dealer Score: {self.dealer_hand.get_sum_bj()}")
 
         while self.dealer_hand.get_sum_bj() < 17:
-            self.win.after(400)
+            time.sleep(0.8)
 
             if self.dealer_hand.size() % 4 == 0:
                 self.lbl_dealer_score.move(0, 80)
@@ -319,34 +337,48 @@ class BlackjackGame:
 
     def play(self):
         """Bind the event listeners to the buttons."""
+        if self.current_screen != "game":
+            return
+
         self.btn_hit.bind_click(self.win, self.hit)
         self.btn_stand.bind_click(self.win, self.stand)
         self.btn_new_game.bind_click(self.win, self.start_new_game)
-        self.win.mainloop()
 
     def on_player_win(self):
+        self.btn_hit.enabled = False
+        self.btn_stand.enabled = False
+        time.sleep(1.5)
         self.win.unbind_all("<Button-1>")
         undraw_all(self.win)
-        win_window(self.win)
+        win_window(self.win, self.player_hand.get_sum_bj(), self.dealer_hand.get_sum_bj())
         self.result_text.draw(self.win)
         self.close_btn.draw(self.win)
         self.close_btn.bind_click(self.win, self.close_win)
+        self.current_screen = "win"
 
     def on_player_lose(self):
+        self.btn_hit.enabled = False
+        self.btn_stand.enabled = False
+        time.sleep(1.5)
         self.win.unbind_all("<Button-1>")
         undraw_all(self.win)
-        lose_window(self.win)
+        lose_window(self.win, self.player_hand.get_sum_bj(), self.dealer_hand.get_sum_bj())
         self.result_text.draw(self.win)
         self.close_btn.draw(self.win)
         self.close_btn.bind_click(self.win, self.close_win)
+        self.current_screen = "lose"
 
     def on_player_tie(self):
+        self.btn_hit.enabled = False
+        self.btn_stand.enabled = False
+        time.sleep(1.5)
         self.win.unbind_all("<Button-1>")
         undraw_all(self.win)
-        tie_window(self.win)
+        tie_window(self.win, self.player_hand.get_sum_bj(), self.dealer_hand.get_sum_bj())
         self.result_text.draw(self.win)
         self.close_btn.draw(self.win)
         self.close_btn.bind_click(self.win, self.close_win)
+        self.current_screen = "tie"
 
 
 def main():
@@ -354,6 +386,7 @@ def main():
     game = BlackjackGame()
     game.start_new_game()
     game.play()
+    game.win.mainloop()
 
 
 main()
