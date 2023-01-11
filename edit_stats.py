@@ -44,6 +44,12 @@ def add_loss() -> None:
 
 # Add time in seconds
 def add_time(time: int) -> None:
+
+    if type(time) != int:
+        raise TypeError("Time must be an integer.")
+    elif time < 0:
+        raise ValueError("Time must be a positive integer.")
+
     with open("stats.json") as file:
         data = json.load(file)
 
