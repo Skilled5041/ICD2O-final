@@ -32,3 +32,7 @@ class Button:
         p2x = max(self.body.getP1().getX(), self.body.getP2().getX())
         p2y = max(self.body.getP1().getY(), self.body.getP2().getY())
         return p1x < click.getX() < p2x and p1y < click.getY() < p2y
+
+    def move_top(self, window: GraphWin):
+        window.tag_raise(self.body.id)
+        window.tag_raise(self.label.id)

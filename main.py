@@ -1,9 +1,19 @@
 from graphics import *
+
+import graphics_elements
 from graphics_elements import Button
-from start_and_lose_screens import win_window, lose_window, tie_window
+from win_and_lose_screens import win_window, lose_window, tie_window
 from audioplayer import AudioPlayer
 import random
 import sys
+
+
+def undraw_all(window):
+    while len(window.items) > 0:
+        if type(window.items[0]) is graphics_elements.Button:
+            window.items[0].undraw(window)
+        elif type(window.items[0]) is not graphics_elements.Button:
+            window.items[0].undraw()
 
 
 class Card:
@@ -156,8 +166,7 @@ class BlackjackGame:
         self.lbl_dealer_score.setTextColor("white")
         self.lbl_dealer_score.draw(self.win)
 
-        self.result_text = Text(Point(600, 450), "")
-        self.result_text.setTextColor("white")
+        self.result_text = Text(Point(600, 650), "")
         self.result_text.setSize(36)
 
         self.dealer_playing = False
@@ -306,8 +315,7 @@ class BlackjackGame:
         elif self.player_hand.get_sum_bj() == self.dealer_hand.get_sum_bj():
             self.player_win = True
             self.result_text.setText("It's a tie!")
-
-            self.on_player_win()
+            self.on_player_tie()
 
     def play(self):
         """Bind the event listeners to the buttons."""
@@ -318,22 +326,27 @@ class BlackjackGame:
 
     def on_player_win(self):
         self.win.unbind_all("<Button-1>")
-        self.win.delete("all")
-        self.result_text.draw(self.win)
+        undraw_all(self.win)
         win_window(self.win)
+        self.result_text.draw(self.win)
+        self.close_btn.draw(self.win)
+        self.close_btn.bind_click(self.win, self.close_win)
 
     def on_player_lose(self):
         self.win.unbind_all("<Button-1>")
-        self.win.delete("all")
-        self.result_text.draw(self.win)
+        undraw_all(self.win)
         lose_window(self.win)
+        self.result_text.draw(self.win)
+        self.close_btn.draw(self.win)
+        self.close_btn.bind_click(self.win, self.close_win)
 
     def on_player_tie(self):
         self.win.unbind_all("<Button-1>")
-        self.win.delete("all")
+        undraw_all(self.win)
         tie_window(self.win)
         self.result_text.draw(self.win)
         self.close_btn.draw(self.win)
+        self.close_btn.bind_click(self.win, self.close_win)
 
 
 def main():
