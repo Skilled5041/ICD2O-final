@@ -16,7 +16,7 @@ def undraw_all(window):
 
 
 class Card:
-    """A class representing a single playing card."""
+    # A class representing a single playing card
     """1 = Diamonds, 2 = Clubs, 3 = Hearts, 4 = Spades"""
     """1 = Ace, 11 = Jack, 12 = Queen, 13 = King"""
 
