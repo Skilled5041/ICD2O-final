@@ -5,6 +5,7 @@ from audioplayer import AudioPlayer
 import random
 import sys
 import time
+import edit_stats
 
 
 def undraw_all(window):
@@ -269,11 +270,14 @@ class BlackjackGame:
             self.result_text.setText("You bust!")
             self.on_player_lose()
 
-        elif self.player_hand.get_sum_bj() == 21:
+        elif self.player_hand.get_sum_bj() == 21 and self.dealer_hand.get_sum_bj() != 21:
             self.player_win = True
             self.btn_hit.enabled = False
             self.result_text.setText("You got 21! You Win!")
             self.on_player_win()
+        elif self.player_hand.get_sum_bj == 21 and self.dealer_hand.get_sum_bj == 21:
+            self.result_text.setText("You both got 21! It's a tie!")
+            self.on_player_tie()
 
     def stand(self, event=None):
         """End the player's turn and start the dealer's turn."""
@@ -345,6 +349,7 @@ class BlackjackGame:
         self.btn_new_game.bind_click(self.win, self.start_new_game)
 
     def on_player_win(self):
+        edit_stats.add_win()
         self.btn_hit.enabled = False
         self.btn_stand.enabled = False
         time.sleep(1.5)
@@ -357,6 +362,7 @@ class BlackjackGame:
         self.current_screen = "win"
 
     def on_player_lose(self):
+        edit_stats.add_loss()
         self.btn_hit.enabled = False
         self.btn_stand.enabled = False
         time.sleep(1.5)
@@ -369,6 +375,7 @@ class BlackjackGame:
         self.current_screen = "lose"
 
     def on_player_tie(self):
+        edit_stats.add_tie()
         self.btn_hit.enabled = False
         self.btn_stand.enabled = False
         time.sleep(1.5)

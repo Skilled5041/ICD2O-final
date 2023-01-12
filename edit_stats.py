@@ -42,9 +42,20 @@ def add_loss() -> None:
         json.dump(data, file, indent=4)
 
 
+def add_tie() -> None:
+    with open("stats.json") as file:
+        data = json.load(file)
+
+    data["ties"] += 1
+    data["games_played"] += 1
+    data["win-rate"] = data["wins"] / data["games_played"]
+
+    with open("stats.json", "w") as file:
+        json.dump(data, file, indent=4)
+
+
 # Add time in seconds
 def add_time(time: int) -> None:
-
     if type(time) != int:
         raise TypeError("Time must be an integer.")
     elif time < 0:

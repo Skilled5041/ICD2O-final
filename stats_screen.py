@@ -16,13 +16,24 @@ def secondsToStr(seconds: int) -> str:
 
 
 def stats_screen(window):
+    def stats_as_string() -> str:
+        string = ""
+        with open("stats.json") as file:
+            data = json.load(file)
+
+        for key in data:
+            if key == "win-rate":
+                string += f"win-rate: {data[key] * 100:.2f}%\n"
+            elif key == "total_time":
+                string += f"total time: {secondsToStr(data[key])}\n"
+            else:
+                string += f"{key.replace('_', ' ')}: {data[key]}\n"
+
+        return string
+
     def reset_stats(event=None) -> None:
         edit_stats.reset()
-        stats.setText(f"Games played: 0\n"
-                      f"Wins: 0\n"
-                      f"Losses: 0\n"
-                      f"Win rate: 0.00%\n"
-                      f"Time played: 0 seconds")
+        stats.setText(stats_as_string())
 
     bg = Image(Point(600, 400), "images/stats_bg.png")
     bg.draw(window)
@@ -42,13 +53,6 @@ def stats_screen(window):
     title.setSize(36)
     title.draw(window)
 
-    with open("stats.json", "r") as files:
-        data = json.load(files)
-
-    stats = Text(Point(600, 500), f"Games played: {data['games_played']}\n"
-                                  f"Wins: {data['wins']}\n"
-                                  f"Losses: {data['losses']}\n"
-                                  f"Win rate: {(data['win-rate'] * 100):.2f}%\n"
-                                  f"Time played: {secondsToStr(data['total_time'])}")
+    stats = Text(Point(600, 500), stats_as_string())
     stats.setSize(24)
     stats.draw(window)
