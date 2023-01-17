@@ -1,16 +1,15 @@
 import json
 
 
+# TODO: Make number of blackjacks
+
 # Reset the stats
 def reset() -> None:
     with open("stats.json") as file:
         data = json.load(file)
 
-    data["games_played"] = 0
-    data["wins"] = 0
-    data["losses"] = 0
-    data["win-rate"] = 0
-    data["total_time"] = 0
+    for key in data:
+        data[key] = 0
 
     with open("stats.json", "w") as file:
         json.dump(data, file, indent=4)

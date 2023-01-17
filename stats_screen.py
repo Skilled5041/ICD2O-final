@@ -56,3 +56,8 @@ def stats_screen(window):
     stats = Text(Point(600, 500), stats_as_string())
     stats.setSize(24)
     stats.draw(window)
+
+
+win = GraphWin("Test", 1200, 800)
+stats_screen(win)
+win.mainloop()
