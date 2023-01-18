@@ -2,8 +2,8 @@ from cards import *
 from graphics import *
 from graphics_elements import Button
 from game import Game
-from win_and_lose_screens import WinScreen, lose_window, tie_window
-import edit_stats
+from screens.win_and_lose_screens import WinScreen, lose_window, tie_window
+from stats import edit_stats
 
 
 # Function to undraw everything in the window

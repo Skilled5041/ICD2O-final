@@ -1,5 +1,5 @@
 from game import Game
-from blackjack_game import BlackjackGame
+from screens.blackjack_game import BlackjackGame
 
 
 def main():

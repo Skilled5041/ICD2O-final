@@ -1,4 +1,4 @@
-import edit_stats
+from stats import edit_stats
 import json
 from graphics import *
 from graphics_elements import Button
@@ -18,7 +18,7 @@ def secondsToStr(seconds: int) -> str:
 def stats_screen(window):
     def stats_as_string() -> str:
         string = ""
-        with open("stats.json") as file:
+        with open("./stats/stats.json") as file:
             data = json.load(file)
 
         for key in data:
