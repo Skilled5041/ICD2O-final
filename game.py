@@ -1,17 +1,14 @@
 from graphics import *
-from graphics_elements import Button
 from audioplayer import AudioPlayer
+from graphics_elements import Button
+import sys
 
 
 class Game:
     window = GraphWin("Blackjack", 1200, 800)
 
-    close_btn = Button(Point(0, 0), Point(30, 30), "X")
-    close_btn.body.setFill("red")
-    close_btn.body.setOutline("red")
-
-    hitsound = AudioPlayer("./sounds/hit_sfx.mp3")
-    standsound = AudioPlayer("./sounds/stand_sfx.mp3")
+    hitsound = AudioPlayer("sounds/hit_sfx.mp3")
+    standsound = AudioPlayer("sounds/stand_sfx.mp3")
     exiting = False
 
     @staticmethod
@@ -41,3 +38,16 @@ class Game:
     @staticmethod
     def mainloop():
         Game.window.mainloop()
+
+    # Function to undraw everything in the window
+    @staticmethod
+    def undraw_all():
+        # Loop through all the items in the window that are currently drawn
+        for i in range(len(Game.window.items)):
+            # Depending on the type of item, undraw it differently (the button I made requires an argument)
+            if type(Game.window.items[0]) is Button:
+                Game.window.items[0].undraw(Game.window)
+            elif type(Game.window.items[0]) is not Button:
+                Game.window.items[0].undraw()
+
+    window.master.protocol("WM_DELETE_WINDOW", close_win)
