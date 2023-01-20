@@ -28,9 +28,9 @@ class Game:
             return
         Game.exiting = True
         # Animation to make the window transparent
-        for i in range(100):
+        for i in range(50):
             # Set the transparency of the window
-            Game.window.master.attributes("-alpha", 1 - i / 100)
+            Game.window.master.attributes("-alpha", 1 - (i * 2) / 100)
             time.sleep(0.01)
         # Exit the program
         sys.exit()
