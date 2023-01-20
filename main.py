@@ -1,5 +1,6 @@
 from game import Game
 from screens.blackjack_game import BlackjackGame
+from screens.start_screen import StartScreen
 
 
 def main():
@@ -7,7 +8,7 @@ def main():
     # BlackjackGame.draw_screen()
     # BlackjackGame.start_new_game()
 
-    from screens.start_screen import StartScreen
+    StartScreen.start()
 
     Game.mainloop()
 

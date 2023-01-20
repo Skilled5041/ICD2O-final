@@ -2,6 +2,7 @@ from stats import edit_stats
 import json
 from graphics import *
 from graphics_elements import Button
+from game import Game
 
 
 def secondsToStr(seconds: int) -> str:
@@ -15,7 +16,8 @@ def secondsToStr(seconds: int) -> str:
         return f"{seconds // (60 * 60 * 24)} days and {(seconds // (60 * 60)) % 24} hours ({seconds // (60 * 60)} hours)"
 
 
-def stats_screen(window):
+class StatsScreen:
+    @staticmethod
     def stats_as_string() -> str:
         string = ""
         with open("./stats/stats.json") as file:
@@ -31,33 +33,42 @@ def stats_screen(window):
 
         return string
 
+    @staticmethod
     def reset_stats(event=None) -> None:
         edit_stats.reset()
-        stats.setText(stats_as_string())
+        StatsScreen.stats.setText(StatsScreen.stats_as_string())
 
     bg = Image(Point(600, 400), "images/stats_bg.png")
-    bg.draw(window)
 
     back_btn = Button(Point(200, 700), Point(0, 600), "Back")
     back_btn.body.setFill("white")
     back_btn.label.setSize(24)
-    back_btn.draw(window)
 
     reset_btn = Button(Point(1000, 450), Point(1200, 550), "Reset Stats")
     reset_btn.body.setFill("white")
     reset_btn.label.setSize(24)
-    reset_btn.draw(window)
-    reset_btn.bind_click(window, reset_stats)
 
     title = Text(Point(600, 300), "Stats")
     title.setSize(36)
-    title.draw(window)
 
     stats = Text(Point(600, 500), stats_as_string())
     stats.setSize(24)
-    stats.draw(window)
 
+    @staticmethod
+    def draw_screen(event=None):
+        Game.undraw_all()
 
-win = GraphWin("Test", 1200, 800)
-stats_screen(win)
-win.mainloop()
+        StatsScreen.bg.draw(Game.window)
+        StatsScreen.back_btn.draw(Game.window)
+        StatsScreen.reset_btn.draw(Game.window)
+        StatsScreen.title.draw(Game.window)
+        StatsScreen.stats.draw(Game.window)
+
+        StatsScreen.reset_btn.bind_click(Game.window, StatsScreen.reset_stats)
+        from screens.start_screen import StartScreen
+        StatsScreen.back_btn.bind_click(Game.window, StartScreen.start)
+
+    @staticmethod
+    def load_audio():
+        pass
+        # Play the audio here with volume at zero, since there is some lag the first time the audio is played

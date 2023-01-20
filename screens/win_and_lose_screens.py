@@ -36,6 +36,7 @@ class ResultScreen:
 
     @staticmethod
     def draw_screen(player_score, dealer_score, result_text, result):
+        Game.undraw_all()
         Game.current_screen = "result"
 
         Game.window.setBackground(ResultScreen.bg_colours[result])

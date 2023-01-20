@@ -290,7 +290,6 @@ class BlackjackGame:
 
     @staticmethod
     def switch_screen(result_text, result):
-        Game.undraw_all()
         ResultScreen.draw_screen(player_score=BlackjackGame.player_hand.get_sum_bj(),
                                  dealer_score=BlackjackGame.dealer_hand.get_sum_bj(),
                                  result_text=result_text, result=result)
