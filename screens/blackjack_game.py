@@ -51,6 +51,17 @@ class BlackjackGame:
     lbl_dealer_score = Text(Point(800, 350), "Dealer Score: ???")
     lbl_dealer_score.setTextColor("white")
 
+    back_btn = Button(Point(180, 570), Point(0, 500), "Back")
+    back_btn.body.setFill("white")
+
+    start_time = int()
+
+    @staticmethod
+    def return_to_start_screen(event=None):
+        Game.undraw_all()
+        from screens.start_screen import StartScreen
+        StartScreen.start()
+
     @staticmethod
     def draw_screen():
 
@@ -60,6 +71,7 @@ class BlackjackGame:
         BlackjackGame.btn_new_game.draw(Game.window)
         BlackjackGame.lbl_player_score.draw(Game.window)
         BlackjackGame.lbl_dealer_score.draw(Game.window)
+        BlackjackGame.back_btn.draw(Game.window)
 
         BlackjackGame.btn_new_game.enabled = True
 
@@ -168,6 +180,7 @@ class BlackjackGame:
             BlackjackGame.on_player_lose("The dealer got 21! You lost!")
 
         else:
+            BlackjackGame.start_time = time.time()
             BlackjackGame.task_executing = False
 
     @staticmethod
@@ -287,6 +300,7 @@ class BlackjackGame:
         BlackjackGame.btn_hit.bind_click(Game.window, BlackjackGame.hit)
         BlackjackGame.btn_stand.bind_click(Game.window, BlackjackGame.stand)
         BlackjackGame.btn_new_game.bind_click(Game.window, BlackjackGame.start_new_game)
+        BlackjackGame.back_btn.bind_click(Game.window, BlackjackGame.return_to_start_screen)
 
     @staticmethod
     def switch_screen(result_text, result):
@@ -297,6 +311,8 @@ class BlackjackGame:
     @staticmethod
     def on_player_win(result_text):
 
+        edit_stats.add_time(int(round(time.time() - BlackjackGame.start_time)))
+
         Game.window.unbind_all("<Button-1>")
         edit_stats.add_win()
 
@@ -305,6 +321,8 @@ class BlackjackGame:
     @staticmethod
     def on_player_lose(result_text):
 
+        edit_stats.add_time(int(round(time.time() - BlackjackGame.start_time)))
+
         Game.window.unbind_all("<Button-1>")
         edit_stats.add_loss()
 
@@ -312,6 +330,8 @@ class BlackjackGame:
 
     @staticmethod
     def on_player_tie(result_text):
+
+        edit_stats.add_time(int(round(time.time() - BlackjackGame.start_time)))
 
         Game.window.unbind_all("<Button-1>")
         edit_stats.add_tie()

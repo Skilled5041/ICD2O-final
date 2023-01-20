@@ -60,5 +60,12 @@ class ResultScreen:
         BlackjackGame.start_new_game()
 
     @staticmethod
+    def switch_to_main_menu(event=None):
+        from screens.start_screen import StartScreen
+        Game.undraw_all()
+        StartScreen.start()
+
+    @staticmethod
     def bind_button_clicks():
         ResultScreen.new_game_btn.bind_click(Game.window, ResultScreen.switch_to_blackjack)
+        ResultScreen.main_menu_btn.bind_click(Game.window, ResultScreen.switch_to_main_menu)

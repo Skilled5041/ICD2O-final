@@ -52,6 +52,11 @@ class StartScreen:
         StartScreen.line_right.draw(Game.window)
         StartScreen.line_middle.draw(Game.window)
 
+        Game.window.setBackground(color_rgb(166, 208, 240))
+        StartScreen.start_button.body.setFill("green")
+        StartScreen.tutorial_button.body.setFill("blue")
+        StartScreen.stats_button.body.setFill("red")
+
     @staticmethod
     def animate():
         for i in range(37):

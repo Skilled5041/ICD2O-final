@@ -64,6 +64,8 @@ class StatsScreen:
         StatsScreen.title.draw(Game.window)
         StatsScreen.stats.draw(Game.window)
 
+        StatsScreen.stats.setText(StatsScreen.stats_as_string())
+
         StatsScreen.reset_btn.bind_click(Game.window, StatsScreen.reset_stats)
         from screens.start_screen import StartScreen
         StatsScreen.back_btn.bind_click(Game.window, StartScreen.start)
