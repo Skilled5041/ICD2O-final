@@ -69,8 +69,3 @@ class StatsScreen:
         StatsScreen.reset_btn.bind_click(Game.window, StatsScreen.reset_stats)
         from screens.start_screen import StartScreen
         StatsScreen.back_btn.bind_click(Game.window, StartScreen.start)
-
-    @staticmethod
-    def load_audio():
-        pass
-        # Play the audio here with volume at zero, since there is some lag the first time the audio is played

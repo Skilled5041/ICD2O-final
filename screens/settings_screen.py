@@ -30,7 +30,9 @@ class SettingsScreen:
     back_button.label.setFill(color_rgb(0, 0, 0))
 
     @staticmethod
-    def draw_screen():
+    def draw_screen(event=None):
+        Game.undraw_all()
+
         SettingsScreen.title_text.draw(Game.window)
 
         Game.window.setBackground(color_rgb(89, 191, 255))
@@ -43,8 +45,7 @@ class SettingsScreen:
         SettingsScreen.sfx_volume_slider.bind_click(Game.window, SettingsScreen.update_sfx_volume)
 
         SettingsScreen.back_button.draw(Game.window)
-
-        SettingsScreen.back_button.bind_click(Game.window, StartScreen.draw_screen)
+        SettingsScreen.back_button.bind_click(Game.window, SettingsScreen.switch_to_main_menu)
 
     @staticmethod
     def update_music_volume(event=None):
@@ -55,9 +56,13 @@ class SettingsScreen:
     def update_sfx_volume(event=None):
         edit_settings.change_sfx_volume(SettingsScreen.sfx_volume_slider.value)
         SettingsScreen.sfx_volume_text.setText(f"Volume: {SettingsScreen.sfx_volume_slider.value * 100:.0f}%")
+        Game.hit_sound.volume = SettingsScreen.sfx_volume_slider.value * 100
+        Game.stand_sound.volume = SettingsScreen.sfx_volume_slider.value * 100
+        Game.win_sfx.volume = SettingsScreen.sfx_volume_slider.value * 100
+        Game.lose_sfx.volume = SettingsScreen.sfx_volume_slider.value * 100
+        Game.new_game_sound.volume = SettingsScreen.sfx_volume_slider.value * 100
 
     @staticmethod
     def switch_to_main_menu(event=None):
-        Game.undraw_all()
-        from screens.start_screen
+        from screens.start_screen import StartScreen
         StartScreen.start()

@@ -70,6 +70,8 @@ class Slider:
         self.round_l.draw(window)
         self.round_r.draw(window)
         self.track_top.draw(window)
+        window.coords(self.track_top.id, self.track.getP1().getX(), self.track.getP1().getY(),
+                      self.knob.getCenter().getX(), self.track.getP2().getY())
         self.knob.draw(window)
         window.items.append(self)
 

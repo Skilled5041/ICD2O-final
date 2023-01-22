@@ -29,7 +29,8 @@ class StartScreen:
     tutorial_button = Button(Point(WIDTH / 2 - 50, HEIGHT / 2 - 25), Point(WIDTH / 2 + 50, HEIGHT / 2 + 25), "Tutorial")
     tutorial_button.body.setFill("blue")
 
-    stats_button = Button(Point(3 * WIDTH / 4 - 50, HEIGHT / 2 - 25), Point(3 * WIDTH / 4 + 50, HEIGHT / 2 + 25), "Stats")
+    stats_button = Button(Point(3 * WIDTH / 4 - 50, HEIGHT / 2 - 25),
+                          Point(3 * WIDTH / 4 + 50, HEIGHT / 2 + 25), "Stats")
     stats_button.body.setFill("red")
 
     line_left = Line(Point(145, 310), Point(180, 240))
@@ -40,8 +41,14 @@ class StartScreen:
     line_left.setWidth(5)
     line_middle.setWidth(5)
 
+    settings_btn = Button(Point(1100, 50), Point(1200, 100), "Settings")
+    settings_btn.body.setFill("yellow")
+
+    names = Text(Point(WIDTH / 2, HEIGHT / 2 + 200), "Made by Aaron and Calvin")
+    names.setSize(32)
+
     @staticmethod
-    def draw_screen():
+    def draw_screen(event=None):
         StartScreen.sidebar1.draw(Game.window)
         StartScreen.sidebar2.draw(Game.window)
         StartScreen.title.draw(Game.window)
@@ -51,6 +58,8 @@ class StartScreen:
         StartScreen.line_left.draw(Game.window)
         StartScreen.line_right.draw(Game.window)
         StartScreen.line_middle.draw(Game.window)
+        StartScreen.settings_btn.draw(Game.window)
+        StartScreen.names.draw(Game.window)
 
         Game.window.setBackground(color_rgb(166, 208, 240))
         StartScreen.start_button.body.setFill("green")
@@ -124,3 +133,5 @@ class StartScreen:
 
         StartScreen.start_button.bind_click(Game.window, StartScreen.switch_to_blackjack)
         StartScreen.stats_button.bind_click(Game.window, StatsScreen.draw_screen)
+        from screens.settings_screen import SettingsScreen
+        StartScreen.settings_btn.bind_click(Game.window, SettingsScreen.draw_screen)

@@ -58,6 +58,8 @@ class BlackjackGame:
 
     @staticmethod
     def return_to_start_screen(event=None):
+        if not BlackjackGame.back_btn.enabled:
+            return
         Game.undraw_all()
         from screens.start_screen import StartScreen
         StartScreen.start()
@@ -84,6 +86,8 @@ class BlackjackGame:
 
         BlackjackGame.task_executing = True
 
+        Game.new_game_sound.play()
+
         for image in BlackjackGame.player_card_images:
             image.undraw()
         for image in BlackjackGame.dealer_card_images:
@@ -100,6 +104,8 @@ class BlackjackGame:
 
         BlackjackGame.btn_hit.enabled = True
         BlackjackGame.btn_stand.enabled = True
+        BlackjackGame.btn_new_game.enabled = True
+        BlackjackGame.back_btn.enabled = True
 
         BlackjackGame.bind_button_clicks()
 
@@ -181,7 +187,8 @@ class BlackjackGame:
 
         else:
             BlackjackGame.start_time = time.time()
-            BlackjackGame.task_executing = False
+
+        BlackjackGame.task_executing = False
 
     @staticmethod
     def hit(event=None):
@@ -192,7 +199,7 @@ class BlackjackGame:
 
         BlackjackGame.task_executing = True
 
-        Game.hitsound.play(loop=False, block=False)
+        Game.hit_sound.play(loop=False, block=False)
 
         if BlackjackGame.player_hand.size() % 4 == 0:
             BlackjackGame.lbl_player_score.move(0, 80)
@@ -246,7 +253,7 @@ class BlackjackGame:
         BlackjackGame.btn_stand.enabled = False
         BlackjackGame.btn_new_game.enabled = False
 
-        Game.standsound.play(loop=False, block=False)
+        Game.stand_sound.play(loop=False, block=False)
 
         BlackjackGame.dealer_card_images[1].undraw()
         BlackjackGame.dealer_card_images[1] = Image(Point(850, 200),
@@ -266,7 +273,7 @@ class BlackjackGame:
             BlackjackGame.dealer_hand.add_card(BlackjackGame.deck.draw())
             BlackjackGame.dealer_card_images.append(Image(Point(750 + (len(BlackjackGame.dealer_card_images) % 4) * 100,
                                                                 200 + (
-                                                                            len(BlackjackGame.dealer_card_images) // 4) * 80),
+                                                                        len(BlackjackGame.dealer_card_images) // 4) * 80),
                                                           Game.get_card_image_file(
                                                               BlackjackGame.dealer_hand.cards[-1])))
             BlackjackGame.dealer_card_images[-1].draw(Game.window)
@@ -311,6 +318,13 @@ class BlackjackGame:
     @staticmethod
     def on_player_win(result_text):
 
+        BlackjackGame.back_btn.enabled = False
+        BlackjackGame.btn_new_game.enabled = False
+        BlackjackGame.btn_hit.enabled = False
+        BlackjackGame.btn_stand.enabled = False
+
+        Game.win_sfx.play(loop=False, block=False)
+
         edit_stats.add_time(int(round(time.time() - BlackjackGame.start_time)))
 
         Game.window.unbind_all("<Button-1>")
@@ -321,6 +335,13 @@ class BlackjackGame:
     @staticmethod
     def on_player_lose(result_text):
 
+        BlackjackGame.back_btn.enabled = False
+        BlackjackGame.btn_new_game.enabled = False
+        BlackjackGame.btn_hit.enabled = False
+        BlackjackGame.btn_stand.enabled = False
+
+        Game.lose_sfx.play(loop=False, block=False)
+
         edit_stats.add_time(int(round(time.time() - BlackjackGame.start_time)))
 
         Game.window.unbind_all("<Button-1>")
@@ -330,6 +351,11 @@ class BlackjackGame:
 
     @staticmethod
     def on_player_tie(result_text):
+
+        BlackjackGame.back_btn.enabled = False
+        BlackjackGame.btn_new_game.enabled = False
+        BlackjackGame.btn_hit.enabled = False
+        BlackjackGame.btn_stand.enabled = False
 
         edit_stats.add_time(int(round(time.time() - BlackjackGame.start_time)))
 
