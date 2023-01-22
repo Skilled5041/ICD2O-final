@@ -4,7 +4,8 @@ from screens.start_screen import StartScreen
 
 def main():
 
-    StartScreen.start()
+    from screens.settings_screen import SettingsScreen
+    SettingsScreen.draw_screen()
 
     Game.mainloop()
 
