@@ -4,7 +4,7 @@ from game import Game
 from screens.start_screen import StartScreen
 import settings.edit_settings as edit_settings
 
-
+#class for Settings Screen which has the sliders and back button 
 class SettingsScreen:
     title_text = Text(Point(600, 300), "Settings")
     title_text.setSize(36)
@@ -28,7 +28,7 @@ class SettingsScreen:
     back_button = Button(Point(0, 600), Point(200, 700), "Back")
     back_button.body.setFill(color_rgb(255, 255, 255))
     back_button.label.setFill(color_rgb(0, 0, 0))
-
+#static method to draw things to the screen
     @staticmethod
     def draw_screen(event=None):
         Game.undraw_all()
@@ -46,7 +46,7 @@ class SettingsScreen:
 
         SettingsScreen.back_button.draw(Game.window)
         SettingsScreen.back_button.bind_click(Game.window, SettingsScreen.switch_to_main_menu)
-
+#updates volume baased on slider
     @staticmethod
     def update_music_volume(event=None):
         edit_settings.change_music_volume(SettingsScreen.music_volume_slider.value)
@@ -63,7 +63,7 @@ class SettingsScreen:
         Game.lose_sfx.volume = SettingsScreen.sfx_volume_slider.value * 100
         Game.new_game_sound.volume = SettingsScreen.sfx_volume_slider.value * 100
         Game.pop_sfx.volume = SettingsScreen.sfx_volume_slider.value * 100
-
+#plays pop sound
     @staticmethod
     def switch_to_main_menu(event=None):
         Game.pop_sfx.play(block=False, loop=False)
