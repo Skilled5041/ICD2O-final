@@ -1,6 +1,7 @@
 from graphics import *
-from graphics_elements import Button
+from graphics_extras import Button
 import random
+
 
 class WinWindow:
     def __init__(self, window):
@@ -35,6 +36,7 @@ class WinWindow:
                     time.sleep(1)
                     sys.exit()
 
+
 class LoseWindow:
     def __init__(self, window):
         self.window = window
@@ -67,6 +69,7 @@ class LoseWindow:
                 time.sleep(1)
                 sys.exit()
 
+
 class RandomCard:
     def __init__(self):
         self.suits = ["spades", "diamonds", "hearts", "clubs"]
@@ -77,12 +80,14 @@ class RandomCard:
     def generate(self):
         return f"./cards/{self.value}_of_{self.suit}.png", self.value
 
+
 class DisplayCard:
     def __init__(self, card_file, window):
         self.card_file = card_file
         self.window = window
         self.card_image = Image(Point(600, 250), self.card_file)
         self.card_image.draw(self.window)
+
 
 class Main:
     def __init__(self):
@@ -91,7 +96,7 @@ class Main:
         self.reveal_button.body.setFill("green")
         self.reveal_button.label.setSize(24)
         self.reveal_button.draw(self.win)
-    
+
         self.slap_button = Button(Point(750, 550), Point(1050, 700), "SLAP")
         self.slap_button.body.setFill("red")
         self.slap_button.label.setSize(24)
@@ -107,8 +112,9 @@ class Main:
                 # additional code to handle the reveal action
             if self.slap_button.inside(click1):
                 # additional code to handle the slap action
+                pass
+
 
 if __name__ == "__main__":
     main = Main()
     main.check_buttons()
-

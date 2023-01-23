@@ -1,4 +1,5 @@
 from graphics import *
+from graphics_extras import Button
 from game import Game
 
 
@@ -19,8 +20,20 @@ class TutorialScreen:
 
     instructions_text.setSize(10)
 
+    back_btn = Button(Point(0, 600), Point(200, 700), "Back")
+    back_btn.body.setFill("white")
+
+    @staticmethod
+    def play_pop(fn):
+        Game.pop_sfx.play(loop=False, block=False)
+        fn()
+
     @staticmethod
     def draw_screen(event=None):
         Game.undraw_all()
 
         TutorialScreen.instructions_text.draw(Game.window)
+        TutorialScreen.back_btn.draw(Game.window)
+
+        from screens.start_screen import StartScreen
+        TutorialScreen.back_btn.bind_click(Game.window, lambda _: TutorialScreen.play_pop(StartScreen.start))

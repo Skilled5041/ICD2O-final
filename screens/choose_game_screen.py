@@ -1,5 +1,5 @@
 from graphics import *
-from graphics_elements import Button
+from graphics_extras import Button
 from screens.blackjack_game import BlackjackGame
 from screens.start_screen import StartScreen
 from game import Game

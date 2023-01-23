@@ -1,7 +1,7 @@
 from stats import edit_stats
 import json
 from graphics import *
-from graphics_elements import Button
+from graphics_extras import Button
 from game import Game
 
 

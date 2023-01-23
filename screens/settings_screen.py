@@ -1,5 +1,5 @@
 from graphics import *
-from graphics_elements import Button, Slider
+from graphics_extras import Button, Slider
 from game import Game
 from screens.start_screen import StartScreen
 import settings.edit_settings as edit_settings

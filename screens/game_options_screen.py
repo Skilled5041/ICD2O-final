@@ -1,5 +1,5 @@
 from graphics import *
-from graphics_elements import Button
+from graphics_extras import Button
 
 
 class GameOptionsScreen:

@@ -1,8 +1,8 @@
 {
-    "games_played": 9,
+    "games_played": 4,
     "wins": 3,
-    "losses": 6,
+    "losses": 1,
     "ties": 0,
-    "win-rate": 0.3333333333333333,
-    "total_time": 1674441200
+    "win-rate": 0.75,
+    "total_time": 7
 }
