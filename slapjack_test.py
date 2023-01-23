@@ -126,7 +126,6 @@ def main():
                 print ("you win")
                 reveal_button.undraw(win)
                 slap_button.undraw(win)
-                card_file.undraw(win)
                 win_window(win)
                 
                 
@@ -136,7 +135,6 @@ def main():
                 lose_window(win)
                 reveal_button.undraw(win)
                 slap_button.undraw(win)
-                card_file.undraw(win)
                 
                 
         else:
