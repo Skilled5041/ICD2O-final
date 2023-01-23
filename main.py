@@ -3,7 +3,7 @@
 # Aaron and Calvin
 # 2023/01/22
 
-# Type this in a terminal to install the required packages:
+# Type this in a terminal to install the required packages:or open the install.ps1 file
 # pip3 install -r requirements.txt
 
 from game import Game
