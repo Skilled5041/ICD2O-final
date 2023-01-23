@@ -23,6 +23,9 @@ class Game:
     new_game_sound = AudioPlayer("sounds/new_game.mp3")
     new_game_sound.volume = edit_settings.get_sfx_volume() * 100
 
+    pop_sfx = AudioPlayer("sounds/pop_sfx.mp3")
+    pop_sfx.volume = edit_settings.get_sfx_volume() * 100
+
     exiting = False
 
     @staticmethod

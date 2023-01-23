@@ -61,6 +61,7 @@ class ResultScreen:
 
     @staticmethod
     def switch_to_main_menu(event=None):
+        Game.pop_sfx.play(loop=False, block=False)
         from screens.start_screen import StartScreen
         Game.undraw_all()
         StartScreen.start()

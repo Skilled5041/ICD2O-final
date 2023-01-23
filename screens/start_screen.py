@@ -65,6 +65,7 @@ class StartScreen:
         StartScreen.start_button.body.setFill("green")
         StartScreen.tutorial_button.body.setFill("blue")
         StartScreen.stats_button.body.setFill("red")
+        StartScreen.settings_btn.body.setFill("yellow")
 
     @staticmethod
     def animate():
@@ -99,6 +100,12 @@ class StartScreen:
         StartScreen.stats_button.undraw(Game.window)
 
         for i in range(10):
+            StartScreen.settings_btn.body.setFill(color_rgb(255 - i * 25, 255 - i * 25, 0))
+            StartScreen.title.setTextColor(color_rgb(255 - i * 25, 255 - i * 25, 255 - i * 25))
+            update(30)
+        StartScreen.settings_btn.undraw(Game.window)
+
+        for i in range(10):
             StartScreen.title.setTextColor(color_rgb(255 - i * 25, 255 - i * 25, 255 - i * 25))
             update(30)
 
@@ -106,6 +113,11 @@ class StartScreen:
             StartScreen.title.setTextColor(color_rgb(255 - i * 25, 255 - i * 25, 255 - i * 25))
             update(30)
         StartScreen.title.undraw()
+
+        for i in range(10):
+            StartScreen.names.setTextColor(color_rgb(255 - i * 25, 255 - i * 25, 255 - i * 25))
+            update(30)
+        StartScreen.names.undraw()
 
         for i in range(int(WIDTH / 2), 0, -10):
             rectangle1 = Rectangle(Point(i, 0), Point(i + 10, HEIGHT))
@@ -119,10 +131,16 @@ class StartScreen:
         Game.undraw_all()
 
     @staticmethod
-    def switch_to_blackjack(event=None):
+    def switch_to_choose_game_screen(event=None):
+        Game.pop_sfx.play(loop=False, block=False)
         StartScreen.fade_out()
-        BlackjackGame.draw_screen()
-        BlackjackGame.start_new_game()
+        from screens.choose_game_screen import ChooseGameScreen
+        ChooseGameScreen.draw_screen()
+
+    @staticmethod
+    def play_pop(fn):
+        Game.pop_sfx.play(loop=False, block=False)
+        fn()
 
     @staticmethod
     def start(event=None):
@@ -131,7 +149,7 @@ class StartScreen:
         StartScreen.draw_screen()
         StartScreen.animate()
 
-        StartScreen.start_button.bind_click(Game.window, StartScreen.switch_to_blackjack)
-        StartScreen.stats_button.bind_click(Game.window, StatsScreen.draw_screen)
+        StartScreen.start_button.bind_click(Game.window, StartScreen.switch_to_choose_game_screen)
+        StartScreen.stats_button.bind_click(Game.window, lambda _: StartScreen.play_pop(StatsScreen.draw_screen))
         from screens.settings_screen import SettingsScreen
-        StartScreen.settings_btn.bind_click(Game.window, SettingsScreen.draw_screen)
+        StartScreen.settings_btn.bind_click(Game.window, lambda _: StartScreen.play_pop(SettingsScreen.draw_screen))

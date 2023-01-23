@@ -61,8 +61,10 @@ class SettingsScreen:
         Game.win_sfx.volume = SettingsScreen.sfx_volume_slider.value * 100
         Game.lose_sfx.volume = SettingsScreen.sfx_volume_slider.value * 100
         Game.new_game_sound.volume = SettingsScreen.sfx_volume_slider.value * 100
+        Game.pop_sfx.volume = SettingsScreen.sfx_volume_slider.value * 100
 
     @staticmethod
     def switch_to_main_menu(event=None):
+        Game.pop_sfx.play(block=False, loop=False)
         from screens.start_screen import StartScreen
         StartScreen.start()

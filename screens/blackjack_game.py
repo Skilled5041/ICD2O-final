@@ -2,7 +2,7 @@ from cards import *
 from graphics import *
 from graphics_elements import Button
 from game import Game
-from screens.win_and_lose_screens import ResultScreen
+from screens.result_screen import ResultScreen
 from stats import edit_stats
 
 
@@ -51,7 +51,7 @@ class BlackjackGame:
     lbl_dealer_score = Text(Point(800, 350), "Dealer Score: ???")
     lbl_dealer_score.setTextColor("white")
 
-    back_btn = Button(Point(180, 570), Point(0, 500), "Back")
+    back_btn = Button(Point(180, 700), Point(0, 800), "Back")
     back_btn.body.setFill("white")
 
     start_time = int()
@@ -60,6 +60,7 @@ class BlackjackGame:
     def return_to_start_screen(event=None):
         if not BlackjackGame.back_btn.enabled:
             return
+        Game.pop_sfx.play(block=False, loop=False)
         Game.undraw_all()
         from screens.start_screen import StartScreen
         StartScreen.start()

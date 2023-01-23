@@ -55,6 +55,11 @@ class StatsScreen:
     stats.setSize(24)
 
     @staticmethod
+    def play_pop(fn):
+        Game.pop_sfx.play(block=False, loop=False)
+        fn()
+
+    @staticmethod
     def draw_screen(event=None):
         Game.undraw_all()
 
@@ -66,6 +71,6 @@ class StatsScreen:
 
         StatsScreen.stats.setText(StatsScreen.stats_as_string())
 
-        StatsScreen.reset_btn.bind_click(Game.window, StatsScreen.reset_stats)
+        StatsScreen.reset_btn.bind_click(Game.window, lambda _: StatsScreen.play_pop(StatsScreen.reset_stats))
         from screens.start_screen import StartScreen
-        StatsScreen.back_btn.bind_click(Game.window, StartScreen.start)
+        StatsScreen.back_btn.bind_click(Game.window, lambda _: StatsScreen.play_pop(StartScreen.start))
