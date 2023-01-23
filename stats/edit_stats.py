@@ -1,13 +1,15 @@
 import json
 
 
-# TODO: Make number of blackjacks
+# Functions will raise errors when the wrong type of data is passed in
+# Opens a file, modifies the data, then saves the file
 
 # Reset the stats
 def reset() -> None:
     with open("stats/stats.json") as file:
         data = json.load(file)
 
+    # Set each value to 0
     for key in data:
         data[key] = 0
 
