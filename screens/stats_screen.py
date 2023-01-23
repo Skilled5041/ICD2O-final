@@ -4,7 +4,7 @@ from graphics import *
 from graphics_extras import Button
 from game import Game
 
-
+#function to convert seconds into minute, hours, or days, if neccessary
 def secondsToStr(seconds: int) -> str:
     if seconds < 60:
         return f"{seconds} seconds"
@@ -15,7 +15,7 @@ def secondsToStr(seconds: int) -> str:
     else:
         return f"{seconds // (60 * 60 * 24)} days and {(seconds // (60 * 60)) % 24} hours ({seconds // (60 * 60)} hours)"
 
-
+#class for stats screen and static method to turn the stats into a string using the json import 
 class StatsScreen:
     @staticmethod
     def stats_as_string() -> str:
@@ -32,7 +32,7 @@ class StatsScreen:
                 string += f"{key.replace('_', ' ')}: {data[key]}\n"
 
         return string
-
+#static method to reset the stats, forcefully setting all values to 0 
     @staticmethod
     def reset_stats(event=None) -> None:
         edit_stats.reset()
@@ -53,7 +53,7 @@ class StatsScreen:
 
     stats = Text(Point(600, 500), stats_as_string())
     stats.setSize(24)
-
+#static method to play the pop sound and add a function to draw things to the screen
     @staticmethod
     def play_pop(fn):
         Game.pop_sfx.play(block=False, loop=False)
