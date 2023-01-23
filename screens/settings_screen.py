@@ -51,6 +51,7 @@ class SettingsScreen:
     def update_music_volume(event=None):
         edit_settings.change_music_volume(SettingsScreen.music_volume_slider.value)
         SettingsScreen.music_volume_text.setText(f"Volume: {SettingsScreen.music_volume_slider.value * 100:.0f}%")
+        Game.bgm.volume = SettingsScreen.music_volume_slider.value * 100
 
     @staticmethod
     def update_sfx_volume(event=None):

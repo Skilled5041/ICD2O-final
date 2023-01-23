@@ -1,0 +1,2 @@
+audioplayer~=0.6
+graphics.py~=5.0.1.post1

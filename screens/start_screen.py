@@ -1,7 +1,6 @@
 from graphics import *
 from graphics_elements import Button
 from screens.stats_screen import StatsScreen
-from screens.blackjack_game import BlackjackGame
 from game import Game
 import time
 
@@ -153,3 +152,5 @@ class StartScreen:
         StartScreen.stats_button.bind_click(Game.window, lambda _: StartScreen.play_pop(StatsScreen.draw_screen))
         from screens.settings_screen import SettingsScreen
         StartScreen.settings_btn.bind_click(Game.window, lambda _: StartScreen.play_pop(SettingsScreen.draw_screen))
+        from screens.tutorial_screen import TutorialScreen
+        StartScreen.tutorial_button.bind_click(Game.window, lambda _: StartScreen.play_pop(TutorialScreen.draw_screen))

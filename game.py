@@ -26,6 +26,10 @@ class Game:
     pop_sfx = AudioPlayer("sounds/pop_sfx.mp3")
     pop_sfx.volume = edit_settings.get_sfx_volume() * 100
 
+    bgm = AudioPlayer("sounds/background_music_sfx.mp3")
+    bgm.volume = edit_settings.get_music_volume() * 100
+    bgm.play(loop=True, block=False)
+
     exiting = False
 
     @staticmethod
