@@ -3,7 +3,7 @@ from graphics_extras import Button
 from game import Game
 import webbrowser
 
-
+#sets tutorial screen class, buttons, and size of text
 class TutorialScreen:
     instructions_blackjack = Button(Point(400, 200), Point(800, 400), "Click for Blackjack Game Rules")
     instructions_blackjack.body.setFill("green")
@@ -15,16 +15,17 @@ class TutorialScreen:
 
     back_btn = Button(Point(0, 600), Point(200, 700), "Back")
     back_btn.body.setFill("white")
+#plays the pop sound on a click
 
     @staticmethod
     def play_pop(fn):
         Game.pop_sfx.play(loop=False, block=False)
         fn()
-
+#static method to open a link        
     @staticmethod
     def open_link(link):
         webbrowser.open_new_tab(link)
-
+#static method to draw things to a sreen
     @staticmethod
     def draw_screen(event=None):
         Game.undraw_all()
