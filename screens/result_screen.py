@@ -3,7 +3,9 @@ from graphics_extras import Button
 from game import Game
 
 
+# Result screen class
 class ResultScreen:
+    # Different result messages and colours depending on the result
     result_message = {
         "win": "You win!",
         "lose": "You lose!",
@@ -16,6 +18,7 @@ class ResultScreen:
         "tie": color_rgb(174, 183, 191)
     }
 
+    # Create the graphics objects
     result = Text(Point(600, 200), "")
     result.setStyle('bold')
     result.setSize(36)
@@ -34,6 +37,7 @@ class ResultScreen:
     result_text = Text(Point(600, 650), "")
     result_text.setSize(36)
 
+    # Draw the screen and bind the clicks, also update the text
     @staticmethod
     def draw_screen(player_score, dealer_score, result_text, result):
         Game.undraw_all()
@@ -52,6 +56,7 @@ class ResultScreen:
 
         ResultScreen.bind_button_clicks()
 
+    # Switch the screen to the blackjack game
     @staticmethod
     def switch_to_blackjack(event=None):
         from screens.blackjack_game import BlackjackGame
@@ -59,6 +64,7 @@ class ResultScreen:
         BlackjackGame.draw_screen()
         BlackjackGame.start_new_game()
 
+    # Switch the screen to the main menu
     @staticmethod
     def switch_to_main_menu(event=None):
         Game.pop_sfx.play(loop=False, block=False)
@@ -66,6 +72,7 @@ class ResultScreen:
         Game.undraw_all()
         StartScreen.start()
 
+    # Function to bind all the button clicks
     @staticmethod
     def bind_button_clicks():
         ResultScreen.new_game_btn.bind_click(Game.window, ResultScreen.switch_to_blackjack)

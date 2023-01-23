@@ -8,6 +8,8 @@ import time
 WIDTH = 1200
 HEIGHT = 800
 
+
+# Start screen class
 class StartScreen:
     # Set the background color of the window
     Game.window.setBackground(color_rgb(166, 208, 240))
@@ -35,7 +37,8 @@ class StartScreen:
     tutorial_button.body.setFill("blue")
 
     # Create the "Stats" button and set its fill color
-    stats_button = Button(Point(3 * WIDTH / 4 - 50, HEIGHT / 2 - 25), Point(3 * WIDTH / 4 + 50, HEIGHT / 2 + 25), "Stats")
+    stats_button = Button(Point(3 * WIDTH / 4 - 50, HEIGHT / 2 - 25), Point(3 * WIDTH / 4 + 50, HEIGHT / 2 + 25),
+                          "Stats")
     stats_button.body.setFill("red")
 
     # Create the three lines
@@ -56,7 +59,7 @@ class StartScreen:
     names = Text(Point(WIDTH / 2, HEIGHT / 2 + 200), "Made by Aaron and Calvin")
     names.setSize(32)
 
-    #method to draw buttons and lines to the window
+    # Function to draw the buttons and lines onto the window
     @staticmethod
     def draw_screen(event=None):
         StartScreen.sidebar1.draw(Game.window)
@@ -76,7 +79,8 @@ class StartScreen:
         StartScreen.tutorial_button.body.setFill("blue")
         StartScreen.stats_button.body.setFill("red")
         StartScreen.settings_btn.body.setFill("yellow")
-    #method to animate sidebars
+
+    # Function to animate the objects
     @staticmethod
     def animate():
         for i in range(37):
@@ -88,7 +92,8 @@ class StartScreen:
             time.sleep(0.01)
             StartScreen.sidebar1.move(-20, 0)
             StartScreen.sidebar2.move(20, 0)
-#method to fade out buttons, sidebars, and text
+
+    # Function to fade out the objects and do more animations
     @staticmethod
     def fade_out(event=None):
         for i in range(10):
@@ -139,19 +144,23 @@ class StartScreen:
             update(100)
 
         Game.undraw_all()
-    #method to switch the screens
+
+    # Function to switch to the choose game screen
     @staticmethod
     def switch_to_choose_game_screen(event=None):
         Game.pop_sfx.play(loop=False, block=False)
         StartScreen.fade_out()
         from screens.choose_game_screen import ChooseGameScreen
         ChooseGameScreen.draw_screen()
-#play the pop sound on click
+
+    # Play a pop sound and then execute a function afterwards
     @staticmethod
     def play_pop(fn):
         Game.pop_sfx.play(loop=False, block=False)
         fn()
-#method to start a game
+
+    # Function to draw the screen and play the starting animations
+    # Also binds the clicks
     @staticmethod
     def start(event=None):
         Game.undraw_all()

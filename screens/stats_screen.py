@@ -4,8 +4,9 @@ from graphics import *
 from graphics_extras import Button
 from game import Game
 
-#function to convert seconds into minute, hours, or days, if neccessary
-def secondsToStr(seconds: int) -> str:
+
+# Function to convert seconds to other units as a string
+def seconds_to_str(seconds: int) -> str:
     if seconds < 60:
         return f"{seconds} seconds"
     elif seconds < 60 * 60:
@@ -15,8 +16,10 @@ def secondsToStr(seconds: int) -> str:
     else:
         return f"{seconds // (60 * 60 * 24)} days and {(seconds // (60 * 60)) % 24} hours ({seconds // (60 * 60)} hours)"
 
-#class for stats screen and static method to turn the stats into a string using the json import 
+
+# Stats screen class
 class StatsScreen:
+    # Function to get the stats as a string
     @staticmethod
     def stats_as_string() -> str:
         string = ""
@@ -27,17 +30,19 @@ class StatsScreen:
             if key == "win-rate":
                 string += f"win-rate: {data[key] * 100:.2f}%\n"
             elif key == "total_time":
-                string += f"total time: {secondsToStr(data[key])}\n"
+                string += f"total time: {seconds_to_str(data[key])}\n"
             else:
                 string += f"{key.replace('_', ' ')}: {data[key]}\n"
 
         return string
-#static method to reset the stats, forcefully setting all values to 0 
+
+    # Reset all the stats back to zero
     @staticmethod
     def reset_stats(event=None) -> None:
         edit_stats.reset()
         StatsScreen.stats.setText(StatsScreen.stats_as_string())
 
+    # Create the graphics objects
     bg = Image(Point(600, 400), "images/stats_bg.png")
 
     back_btn = Button(Point(200, 700), Point(0, 600), "Back")
@@ -53,12 +58,14 @@ class StatsScreen:
 
     stats = Text(Point(600, 500), stats_as_string())
     stats.setSize(24)
-#static method to play the pop sound and add a function to draw things to the screen
+
+    # Play a pop sound then execute a function afterwards
     @staticmethod
     def play_pop(fn):
         Game.pop_sfx.play(block=False, loop=False)
         fn()
 
+    # Function to draw all the graphics objects and bind the clicks
     @staticmethod
     def draw_screen(event=None):
         Game.undraw_all()

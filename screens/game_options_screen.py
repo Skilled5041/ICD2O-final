@@ -1,3 +1,5 @@
+# Used for unfinished feature of allowing user to choose number of players and bots
+
 from graphics import *
 from graphics_extras import Button
 
