@@ -4,7 +4,8 @@ from screens.blackjack_game import BlackjackGame
 from screens.start_screen import StartScreen
 from game import Game
 
-
+#creates class allowing the user to choose which game to play
+#creates button for blackhack, slapjack, and going back to main menu
 class ChooseGameScreen:
 
     title_text = Text(Point(600, 250), "Choose A Game To Play")
@@ -24,12 +25,12 @@ class ChooseGameScreen:
     back_button.body.setFill(color_rgb(255, 255, 255))
     back_button.label.setFill(color_rgb(0, 0, 0))
     back_button.label.setSize(24)
-
+#static method that plays pop sound
     @staticmethod
     def play_pop(fn):
         Game.pop_sfx.play(block=False, loop=False)
         fn()
-
+#static method that draws objects to the screen
     @staticmethod
     def draw_screen():
         Game.undraw_all()
@@ -42,7 +43,7 @@ class ChooseGameScreen:
 
         ChooseGameScreen.blackjack_button.bind_click(Game.window, ChooseGameScreen.switch_to_blackjack)
         ChooseGameScreen.back_button.bind_click(Game.window, lambda _: ChooseGameScreen.play_pop(StartScreen.start))
-
+#static method that allows the user to switch to blackjack, and plays a noise when the user clicks
     @staticmethod
     def switch_to_blackjack(event=None):
         Game.pop_sfx.play(block=False, loop=False)
