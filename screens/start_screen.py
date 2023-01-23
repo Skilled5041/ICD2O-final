@@ -4,48 +4,59 @@ from screens.stats_screen import StatsScreen
 from game import Game
 import time
 
+# Constants for the window width and height
 WIDTH = 1200
 HEIGHT = 800
 
-
 class StartScreen:
+    # Set the background color of the window
     Game.window.setBackground(color_rgb(166, 208, 240))
 
+    # Create the left sidebar as a Polygon object and set its fill color
     sidebar1 = Polygon(Point(0, 0), Point(WIDTH / 8, HEIGHT / 8), Point(WIDTH / 10, HEIGHT), Point(0, HEIGHT))
     sidebar1.setFill(color_rgb(91, 177, 243))
 
+    # Create the right sidebar as a Polygon object and set its fill color
     sidebar2 = Polygon(Point(WIDTH, 0), Point(7 * WIDTH / 8, HEIGHT / 8), Point(9 * WIDTH / 10, HEIGHT),
                        Point(WIDTH, HEIGHT))
     sidebar2.setFill(color_rgb(91, 177, 243))
 
-    title = Text(Point(WIDTH / 2, HEIGHT / 4), "Welcome to Blackjack!")
+    # Create the title text and set its text color and size
+    title = Text(Point(WIDTH / 2, HEIGHT / 4), "Welcome to our game!")
     title.setSize(32)
     title.setTextColor("white")
 
+    # Create the "Start" button and set its fill color
     start_button = Button(Point(WIDTH / 4 - 50, HEIGHT / 2 - 25), Point(WIDTH / 4 + 50, HEIGHT / 2 + 25), "Start")
     start_button.body.setFill("green")
 
+    # Create the "Tutorial" button and set its fill color
     tutorial_button = Button(Point(WIDTH / 2 - 50, HEIGHT / 2 - 25), Point(WIDTH / 2 + 50, HEIGHT / 2 + 25), "Tutorial")
     tutorial_button.body.setFill("blue")
 
-    stats_button = Button(Point(3 * WIDTH / 4 - 50, HEIGHT / 2 - 25),
-                          Point(3 * WIDTH / 4 + 50, HEIGHT / 2 + 25), "Stats")
+    # Create the "Stats" button and set its fill color
+    stats_button = Button(Point(3 * WIDTH / 4 - 50, HEIGHT / 2 - 25), Point(3 * WIDTH / 4 + 50, HEIGHT / 2 + 25), "Stats")
     stats_button.body.setFill("red")
 
+    # Create the three lines
     line_left = Line(Point(145, 310), Point(180, 240))
     line_right = Line(Point(1030, 240), Point(1055, 310))
     line_middle = Line(Point(180, 240), Point(1030, 240))
 
+    # Set the width of the lines
     line_right.setWidth(5)
     line_left.setWidth(5)
     line_middle.setWidth(5)
 
+    # Create the "Settings" button and set its fill color
     settings_btn = Button(Point(1100, 50), Point(1200, 100), "Settings")
     settings_btn.body.setFill("yellow")
 
+    # Create the names text and set its size
     names = Text(Point(WIDTH / 2, HEIGHT / 2 + 200), "Made by Aaron and Calvin")
     names.setSize(32)
 
+    #method to draw buttons and lines to the window
     @staticmethod
     def draw_screen(event=None):
         StartScreen.sidebar1.draw(Game.window)
@@ -65,7 +76,7 @@ class StartScreen:
         StartScreen.tutorial_button.body.setFill("blue")
         StartScreen.stats_button.body.setFill("red")
         StartScreen.settings_btn.body.setFill("yellow")
-
+    #method to animate sidebars
     @staticmethod
     def animate():
         for i in range(37):
@@ -77,7 +88,7 @@ class StartScreen:
             time.sleep(0.01)
             StartScreen.sidebar1.move(-20, 0)
             StartScreen.sidebar2.move(20, 0)
-
+#method to fade out buttons, sidebars, and text
     @staticmethod
     def fade_out(event=None):
         for i in range(10):
@@ -128,19 +139,19 @@ class StartScreen:
             update(100)
 
         Game.undraw_all()
-
+    #method to switch the screens
     @staticmethod
     def switch_to_choose_game_screen(event=None):
         Game.pop_sfx.play(loop=False, block=False)
         StartScreen.fade_out()
         from screens.choose_game_screen import ChooseGameScreen
         ChooseGameScreen.draw_screen()
-
+#play the pop sound on click
     @staticmethod
     def play_pop(fn):
         Game.pop_sfx.play(loop=False, block=False)
         fn()
-
+#method to start a game
     @staticmethod
     def start(event=None):
         Game.undraw_all()
