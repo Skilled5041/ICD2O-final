@@ -2,7 +2,7 @@ from graphics import *
 from graphics_extras import Button
 from game import Game
 
-
+#class for results screen which displays whether the result of the game was a win, lose, or tie
 class ResultScreen:
     result_message = {
         "win": "You win!",
@@ -15,7 +15,7 @@ class ResultScreen:
         "lose": color_rgb(255, 143, 143),
         "tie": color_rgb(174, 183, 191)
     }
-
+#new game and quit buttons 
     result = Text(Point(600, 200), "")
     result.setStyle('bold')
     result.setSize(36)
@@ -33,7 +33,7 @@ class ResultScreen:
 
     result_text = Text(Point(600, 650), "")
     result_text.setSize(36)
-
+#static method to draw the values of the dealer's score, players, score, and the text for the result of the game 
     @staticmethod
     def draw_screen(player_score, dealer_score, result_text, result):
         Game.undraw_all()
@@ -51,7 +51,7 @@ class ResultScreen:
         ResultScreen.result_text.draw(Game.window)
 
         ResultScreen.bind_button_clicks()
-
+#static method to switch to another screen, be it another game or going back to a main menu
     @staticmethod
     def switch_to_blackjack(event=None):
         from screens.blackjack_game import BlackjackGame
