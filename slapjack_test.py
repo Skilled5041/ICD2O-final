@@ -1,134 +1,145 @@
 from graphics import *
-from graphics_elements import Button
 import random
+from graphics_elements import Button
+
+def win_window(window):
+    window.setBackground(color_rgb(113, 203, 255))
+    win_message = Text(Point(600, 200), "Congrats, you won!")
+    win_message.setStyle('bold')
+    win_message.setSize(36)
+    win_message.draw(window)
+
+    new_game_btn = Button(Point(250, 400), Point(450, 500), "New Game")
+    new_game_btn.body.setFill("green")
+    new_game_btn.label.setSize(24)
+    new_game_btn.draw(window)
+
+    main_menu_btn = Button(Point(750, 400), Point(950, 500), "Quit")
+    main_menu_btn.body.setFill("red")
+    main_menu_btn.label.setSize(24)
+    main_menu_btn.draw(window)
 
 
-class SlapjackGame:
-    def __init__(self):
-        self.win = GraphWin("Slapjack", 1200, 800)
-        self.deck = Deck()
-        self.deck.shuffle()
-        self.hand = Hand()
-        self.top_card = None
-        self.slap_button = Button(Point(1050, 750), Point(1100, 775), "SLAP")
-        self.slap_button.body.setFill("red")
-        self.slap_button.draw(self.win)
-        self.card_image = None
-
-        # # create new button
-        self.reveal_button = Button(Point(1000, 750), Point(1050, 775), "REVEAL")
-        self.reveal_button.body.setFill("green")
-        self.reveal_button.draw(self.win)
-
-    @staticmethod
-    def get_card_image_file(value: int, suit: int) -> str:
-        """Return the file name of the image for the given card."""
-        values = ["ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"]
-        suits = ["diamonds", "clubs", "hearts", "spades"]
-        return f"./cards/{values[value - 1]}_of_{suits[suit - 1]}.png"
-
-    def run(self):
-        self.slap_button.bind_click(self.win, self.slap)
-        self.slap_button.bind_click(self.win, self.reveal_card)
-
-    def slap(self):
-        self.top_card = self.deck.draw()
-        self.hand.add_card(self.top_card)
-        self.card_image = Image(Point(600, 400), "./images/card_back.png")
-        self.card_image.draw(self.win)
-        self.check_slap()
-
-    def check_slap(self):
-        """checks if the player has won or lost"""
-        pass
-
-    def reveal_card(self):
-        """ reveal the top card """
-        self.card_image.undraw()
-        card_image_file = self.get_card_image_file(self.top_card.get_value(), self.top_card.get_suit_int())
-        self.card_image = Image(Point(600, 400), card_image_file)
-        self.card_image.draw(self.win)
+    if not window.isClosed():
+        while True:
+            
+            click1=window.getMouse()
+            if new_game_btn.inside(click1):
+                window.close()
+                main()
+                
+            if main_menu_btn.inside(click1):
+                quit_text=Text(Point(600,600), "Quitting the game...")
+                quit_text.setSize(20)
+                quit_text.draw(window)
+                time.sleep(1)
+                sys.exit()
 
 
-class Card:
-    """A class representing a single playing card."""
-    """1 = Diamonds, 2 = Clubs, 3 = Hearts, 4 = Spades"""
-    """1 = Ace, 11 = Jack, 12 = Queen, 13 = King"""
+def lose_window(window):
+    window.setBackground(color_rgb(255, 204, 203))
 
-    def __init__(self, suit: int, value: int):
-        """Initialize a new Card with the given suit and value."""
-        suits = ["Diamonds", "Clubs", "Hearts", "Spades"]
-        self.suit = suits[suit - 1]
-        self.value = value
+    lost_message = Text(Point(600, 200), "You Lost :(")
+    lost_message.setStyle('bold')
+    lost_message.setSize(36)
+    lost_message.draw(window)
 
-    def get_suit_str(self) -> str:
-        """Return the suit of the card."""
-        return self.suit
+    new_game_btn = Button(Point(250, 400), Point(450, 500), "New Game")
+    new_game_btn.body.setFill("green")
+    new_game_btn.label.setSize(24)
+    new_game_btn.draw(window)
 
-    def get_suit_int(self) -> int:
-        return ["Diamonds", "Clubs", "Hearts", "Spades"].index(self.suit) + 1
+    main_menu_btn = Button(Point(750, 400), Point(950, 500), "Quit")
+    main_menu_btn.body.setFill("red")
+    main_menu_btn.label.setSize(24)
+    main_menu_btn.draw(window)
+    
 
-    def get_value(self) -> int:
-        """Return the value of the card."""
-        return self.value
+   
+    if not window.isClosed():
 
-    def get_name(self) -> str:
-        """Return the name of the card, such as 'Ace of Spades'."""
-        if self.value > 10 or self.value == 1:
-            if self.value == 1:
-                value = "Ace"
-            if self.value == 11:
-                value = "Jack"
-            elif self.value == 12:
-                value = "Queen"
-            elif self.value == 13:
-                value = "King"
+            if new_game_btn.bind_click(window, lambda *args: None):
+                window.close()
+                main()
+                
+            if main_menu_btn.bind_click(window,lambda *args: None):
+                quit_text=Text(Point(600,600), "Quitting the game...")
+                quit_text.setSize(20)
+                quit_text.draw(window)
+                time.sleep(1)
+                sys.exit()
 
+
+
+
+def generate_random_card():
+    suits = ["spades", "diamonds", "hearts", "clubs"]
+    values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace"]
+    suit = random.choice(suits)
+    value = random.choice(values)
+    return f"./cards/{value}_of_{suit}.png", value
+
+
+
+def display_card(card_file, window):
+    card_image = Image(Point(600, 250), card_file)
+    card_image.draw(window)
+
+def main():
+    win = GraphWin("Slapjack", 1200, 800)
+    reveal_button = Button(Point(250, 550), Point(550, 700), "REVEAL")
+    reveal_button.body.setFill("green")
+    reveal_button.label.setSize(24)
+    reveal_button.draw(win)
+    
+    slap_button = Button(Point(750, 550), Point(1050, 700), "SLAP")
+    slap_button.body.setFill("red")
+    slap_button.label.setSize(24)
+    slap_button.draw(win)
+    while True:
+
+        
+        click1=win.getMouse()
+        
+        slap_button.body.setFill("red")
+        slap_button.label.setSize(24)
+        if reveal_button.inside(click1):
+            card_file,value = generate_random_card()
+            display_card(card_file, win)
+            slap_button.undraw(win)
+            x1 = random.randint(50,900)
+            x2= x1+200
+            y1= random.randint(100,900)
+            y2= y1+200
+            if x1 > 150 or x2 <650 or y1 > 650 or y2 < 800:
+                x1 = random.randint(50,900)
+                x2= x1+200
+                y1= random.randint(100,900)
+                y2= y1+200
+            slap_button = Button(Point(x1, y1), Point(x2, y2), "SLAP")
+            slap_button.label.setSize(24)
+            slap_button.body.setFill("red")
+            slap_button.draw(win)
+            
+        elif slap_button.inside(click1):
+            if value =="jack":
+                print ("you win")
+                reveal_button.undraw(win)
+                slap_button.undraw(win)
+                card_file.undraw(win)
+                win_window(win)
+                
+                
+                
+            else:
+                print ("you lose")
+                lose_window(win)
+                reveal_button.undraw(win)
+                slap_button.undraw(win)
+                card_file.undraw(win)
+                
+                
         else:
-            value = self.value
-
-        return f"{value} of {self.suit}"
-
-
-class Deck:
-    """A class representing a deck of playing cards."""
-
-    def __init__(self):
-        """Initialize a new deck of 52 cards."""
-        self.cards = []
-        for i in range(13):
-            for j in range(4):
-                self.cards.append(Card(j + 1, i + 1))
-
-    def shuffle(self):
-        """Shuffle the deck of cards."""
-        random.shuffle(self.cards)
-
-    def draw(self) -> Card:
-        """Draw the top card from the deck and return it."""
-        return self.cards.pop()
-
-
-class Hand:
-    """A class representing a player's hand in a card game."""
-
-    def __init__(self):
-        """Initialize a new hand with the given list of cards."""
-        self.cards = []
-
-    def add_card(self, card: Card):
-        """Add a card to the hand."""
-        self.cards.append(card)
-
-    def get_cards(self) -> list:
-        """Return the cards in the hand."""
-        return self.cards
-
-    def size(self) -> int:
-        """Return the number of cards in the hand."""
-        return len(self.cards)
-
-
-slapjack = SlapjackGame()
-slapjack.run()
-slapjack.win.mainloop()
+            pass
+        
+main()
